@@ -3,7 +3,7 @@ package com.example;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
-import com.example.dictionary.Service;
+import com.example.helloworld.Service;
 
 public class App {
 

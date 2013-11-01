@@ -1,6 +1,7 @@
 package com.example.dictionary;
 
-import com.example.dictionary.ExampleService;
+import com.example.helloworld.ExampleService;
+
 import junit.framework.TestCase;
 
 public class ExampleServiceTests extends TestCase {

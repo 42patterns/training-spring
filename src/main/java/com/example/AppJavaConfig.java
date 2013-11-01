@@ -5,7 +5,7 @@ import org.springframework.context.annotation.AnnotationConfigApplicationContext
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 
-import com.example.dictionary.Service;
+import com.example.helloworld.Service;
 
 public class AppJavaConfig {
 

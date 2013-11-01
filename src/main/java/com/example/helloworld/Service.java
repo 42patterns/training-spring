@@ -1,4 +1,4 @@
-package com.example.dictionary;
+package com.example.helloworld;
 
 public interface Service {
 	

@@ -2,7 +2,7 @@ package com.example.dictionary;
 
 import static org.junit.Assert.assertNotNull;
 
-import com.example.dictionary.Service;
+import com.example.helloworld.Service;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
