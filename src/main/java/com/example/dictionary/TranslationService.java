@@ -11,15 +11,21 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import com.example.dictionary.model.DictionaryWord;
 
 @Component
 public class TranslationService {
+	private static Logger log = Logger.getLogger(TranslationService.class);
 
-	BufferedReader bufferedReader;
-	
+	@Value("${urlStringTemplate}")
+	private String urlStringTemplate;
+
+	private BufferedReader bufferedReader;
+
 	public List<DictionaryWord> getDictionaryWords(String command) {
 		Iterator<String> iterator = getWords(command).iterator();
 		List<DictionaryWord> words = new ArrayList<DictionaryWord>();
@@ -53,9 +59,9 @@ public class TranslationService {
 		try {
 			String[] commandParts = command.split(" ");
 			String wordToFind = commandParts[1];
-			String urlString = "http://www.dict.pl/dict?word=" + wordToFind
-					+ "&words=&lang=PL";
-
+			String urlString = urlStringTemplate.replace("{}", wordToFind);
+			log.info("URL: " + urlString);
+			
 			bufferedReader = new BufferedReader(new InputStreamReader(new URL(
 					urlString).openStream()));
 		} catch (MalformedURLException ex) {

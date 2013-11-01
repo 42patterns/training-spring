@@ -1,18 +1,19 @@
 package com.example.dictionary;
 
-import static org.junit.Assert.*;
-
-import java.util.List;
-
+import com.example.dictionary.model.DictionaryWord;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.PropertySource;
+import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import com.example.dictionary.model.DictionaryWord;
+import java.util.List;
+
+import static org.junit.Assert.*;
 
 @ContextConfiguration(classes = TranslationServiceTest.JavaConfiguration.class)
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -31,8 +32,18 @@ public class TranslationServiceTest {
 	
 	
 	@Configuration
-	@ComponentScan("com.example.dictionary")
-	public static class JavaConfiguration {
+    @PropertySource("META-INF/spring/dict.properties")
+    public static class JavaConfiguration {
+
+        @Bean
+        public PropertySourcesPlaceholderConfigurer properties() {
+            return new PropertySourcesPlaceholderConfigurer();
+        }
+
+        @Bean
+        public TranslationService service() {
+            return new TranslationService();
+        }
 		
 	}
 }
