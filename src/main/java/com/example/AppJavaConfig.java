@@ -1,25 +1,26 @@
 package com.example;
 
-import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.support.AbstractApplicationContext;
 
-import com.example.helloworld.Service;
+import com.example.dictionary.Controller;
 
 public class AppJavaConfig {
 
 	public static void main(String... args) {
 
-		ApplicationContext ctx = new AnnotationConfigApplicationContext(
+		AbstractApplicationContext ctx = new AnnotationConfigApplicationContext(
 				AppConfiguration.class);
-		Service service = ctx.getBean(Service.class);
+		Controller c = ctx.getBean(Controller.class);
+		c.run();
 
-		System.out.println(service.getMessage());
+		ctx.close();
 	}
 
 	@Configuration
-	@ComponentScan("com.example")
+	@ComponentScan({"com.example.dictionary", "com.example.helloworld"})
 	public static class AppConfiguration {
 
 	}
