@@ -1,18 +1,25 @@
 package com.example;
 
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
+import java.util.Scanner;
 
-import com.example.helloworld.Service;
+import org.springframework.context.support.AbstractApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 public class App {
 
 	public static void main(String... args) {
 
-		ApplicationContext ctx = new ClassPathXmlApplicationContext("META-INF/spring/app-context.xml");
-		Service service = ctx.getBean(Service.class);
+		AbstractApplicationContext ctx = new ClassPathXmlApplicationContext("META-INF/spring/app-context.xml");
 		
-		System.out.println(service.getMessage());
+		boolean ok = true;
+		Scanner s = new Scanner(System.in);
+		while (ok) {
+			System.out.println("dictionary > ");
+			String command = s.nextLine();
+		}
+		s.close();
+		
+		ctx.close();
 	}
 	
 }

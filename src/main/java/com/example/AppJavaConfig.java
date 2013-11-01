@@ -19,7 +19,7 @@ public class AppJavaConfig {
 	}
 
 	@Configuration
-	@ComponentScan("com.example.dictionary")
+	@ComponentScan("com.example")
 	public static class AppConfiguration {
 
 	}

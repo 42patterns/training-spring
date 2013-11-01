@@ -7,6 +7,6 @@
 
 	<description>Example configuration to get you started.</description>
 
-	<context:component-scan base-package="com.example.dictionary" />
+	<context:component-scan base-package="com.example" />
 
 </beans>
