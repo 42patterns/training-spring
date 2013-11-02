@@ -5,6 +5,7 @@ import org.springframework.context.annotation.AnnotationConfigApplicationContext
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.context.annotation.FilterType;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.support.AbstractApplicationContext;
@@ -31,6 +32,7 @@ public class AppJavaConfig {
 				type = FilterType.ANNOTATION)
 	)
     @PropertySource("META-INF/spring/dict.properties")
+	@EnableAspectJAutoProxy
 	public static class AppConfiguration {
 	
 		@Bean(name="validator")
