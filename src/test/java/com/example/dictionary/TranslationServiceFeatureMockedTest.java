@@ -17,6 +17,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.example.dictionary.TranslationServiceFeatureMockedTest.JavaConfiguration;
+import com.example.dictionary.config.GenericTestConfiguration;
 import com.example.dictionary.model.DictionaryWord;
 import com.github.rmannibucau.featuredmock.http.FeaturedHttpServer;
 import com.github.rmannibucau.featuredmock.http.FeaturedHttpServerBuilder;
@@ -42,7 +43,7 @@ public class TranslationServiceFeatureMockedTest {
 	
 	@Test
 	public void bookTranslationTest() {
-		List<DictionaryWord> dictionaryWords = service.getDictionaryWords("search book");
+		List<DictionaryWord> dictionaryWords = service.getDictionaryWords(new CommandParameters("search book"));
 		
 		assertEquals(24, dictionaryWords.size());
 		assertEquals("książka", dictionaryWords.get(1).getPolishWord());
@@ -50,13 +51,8 @@ public class TranslationServiceFeatureMockedTest {
 	
 	
 	@Configuration
-	public static class JavaConfiguration {
+	public static class JavaConfiguration extends GenericTestConfiguration {
 
-		@Bean
-		public TranslationService service() {
-			return new TranslationService();
-		}
-		
 		@Bean
 		public PropertySourcesPlaceholderConfigurer serverConfiguration() {
 			Properties props = new Properties();

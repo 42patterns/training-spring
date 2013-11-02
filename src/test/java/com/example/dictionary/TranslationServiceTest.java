@@ -10,6 +10,7 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 
 import java.util.List;
 
@@ -24,7 +25,7 @@ public class TranslationServiceTest {
 	
 	@Test
 	public void bookTranslationTest() {
-		List<DictionaryWord> dictionaryWords = service.getDictionaryWords("search book");
+		List<DictionaryWord> dictionaryWords = service.getDictionaryWords(new CommandParameters("search book"));
 		
 		assertEquals(24, dictionaryWords.size());
 		assertEquals("książka", dictionaryWords.get(1).getPolishWord());
@@ -43,6 +44,11 @@ public class TranslationServiceTest {
         @Bean
         public TranslationService service() {
             return new TranslationService();
+        }
+
+        @Bean
+        public LocalValidatorFactoryBean validator() {
+            return new LocalValidatorFactoryBean();
         }
 		
 	}

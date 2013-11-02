@@ -10,4 +10,6 @@
 	<context:component-scan base-package="com.example.dictionary, com.example.helloworld" />
 	<context:property-placeholder location="classpath:META-INF/spring/dict.properties" />
 
+	<bean id="validator" class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean" />
+
 </beans>

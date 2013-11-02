@@ -9,6 +9,8 @@ import org.springframework.context.annotation.FilterType;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.support.AbstractApplicationContext;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
+import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
+
 
 public class AppJavaConfig {
 
@@ -31,6 +33,11 @@ public class AppJavaConfig {
     @PropertySource("META-INF/spring/dict.properties")
 	public static class AppConfiguration {
 	
+		@Bean(name="validator")
+		public LocalValidatorFactoryBean validator() {
+			return new LocalValidatorFactoryBean();
+		}
+		
 		@Bean
 		public PropertySourcesPlaceholderConfigurer properties() {
 			return new PropertySourcesPlaceholderConfigurer();

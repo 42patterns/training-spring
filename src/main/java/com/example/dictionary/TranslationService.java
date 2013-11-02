@@ -8,14 +8,20 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import javax.validation.ConstraintViolation;
+import javax.validation.Validator;
+
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import com.example.dictionary.model.DictionaryWord;
+import com.example.dictionary.validation.SearchValidationGroup;
 
 @Component
 public class TranslationService {
@@ -24,10 +30,17 @@ public class TranslationService {
 	@Value("${urlStringTemplate}")
 	private String urlStringTemplate;
 
+	@Autowired
+	private Validator validator;
+	
 	private BufferedReader bufferedReader;
 
-	public List<DictionaryWord> getDictionaryWords(String command) {
-		Iterator<String> iterator = getWords(command).iterator();
+	public Set<ConstraintViolation<CommandParameters>> validate(CommandParameters params) {
+		return validator.validate(params, SearchValidationGroup.class);
+	}
+	
+	public List<DictionaryWord> getDictionaryWords(CommandParameters params) {
+		Iterator<String> iterator = getWords(params).iterator();
 		List<DictionaryWord> words = new ArrayList<DictionaryWord>();
 		
 		while (iterator.hasNext()) {
@@ -41,9 +54,9 @@ public class TranslationService {
 		return words;
 	}
 	
-	public List<String> getWords(String command) {
+	public List<String> getWords(CommandParameters params) {
 		List<String> words = new ArrayList<String>();
-		prepareBufferedReader(command);
+		prepareBufferedReader(params.getAttributes());
 		
 		String word = moveToNextWord();
 		while (hasNext(word)) {
@@ -55,10 +68,9 @@ public class TranslationService {
 		return words;
 	}
 
-	private void prepareBufferedReader(String command) {
+	private void prepareBufferedReader(String[] commandAttributes) {
 		try {
-			String[] commandParts = command.split(" ");
-			String wordToFind = commandParts[1];
+			String wordToFind = commandAttributes[0];
 			String urlString = urlStringTemplate.replace("{}", wordToFind);
 			log.info("URL: " + urlString);
 			

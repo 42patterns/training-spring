@@ -2,6 +2,9 @@ package com.example.dictionary;
 
 import java.util.List;
 import java.util.Scanner;
+import java.util.Set;
+
+import javax.validation.ConstraintViolation;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -21,10 +24,20 @@ public class Controller {
 			System.out.print("dictionary > ");
 			String command = s.nextLine();
 			
-			if ("exit".equals(command)) {
+			CommandParameters params = new CommandParameters(command);
+			
+			if ("exit".equals(params.getCommandName())) {
 				ok = false;
-			} else if (command.startsWith("search")) {
-				List<DictionaryWord> words = transations.getDictionaryWords(command);
+			} else if ("search".equals(params.getCommandName())) {
+				Set<ConstraintViolation<CommandParameters>> errors = transations.validate(params);
+				if (!errors.isEmpty()) {
+					for (ConstraintViolation<CommandParameters> e: errors) {
+						System.out.println("Field [name="+e.getPropertyPath()+"]: "+e.getMessage());
+					}
+					continue;
+				}
+				
+				List<DictionaryWord> words = transations.getDictionaryWords(params);
 				System.out.println(words);
 			}
 		}

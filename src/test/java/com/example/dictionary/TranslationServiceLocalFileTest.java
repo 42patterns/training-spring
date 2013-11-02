@@ -5,8 +5,6 @@ import static org.junit.Assert.*;
 import java.util.List;
 import java.util.Properties;
 
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,9 +15,8 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.example.dictionary.TranslationServiceLocalFileTest.JavaConfiguration;
+import com.example.dictionary.config.GenericTestConfiguration;
 import com.example.dictionary.model.DictionaryWord;
-import com.github.rmannibucau.featuredmock.http.FeaturedHttpServer;
-import com.github.rmannibucau.featuredmock.http.FeaturedHttpServerBuilder;
 
 @ContextConfiguration(classes = JavaConfiguration.class)
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -30,7 +27,7 @@ public class TranslationServiceLocalFileTest {
 	
 	@Test
 	public void bookTranslationTest() {
-		List<DictionaryWord> dictionaryWords = service.getDictionaryWords("search book");
+		List<DictionaryWord> dictionaryWords = service.getDictionaryWords(new CommandParameters("search book"));
 		
 		assertEquals(24, dictionaryWords.size());
 		assertEquals("książka", dictionaryWords.get(1).getPolishWord());
@@ -38,13 +35,8 @@ public class TranslationServiceLocalFileTest {
 	
 	
 	@Configuration
-	public static class JavaConfiguration {
+	public static class JavaConfiguration extends GenericTestConfiguration {
 
-		@Bean
-		public TranslationService service() {
-			return new TranslationService();
-		}
-		
 		@Bean
 		public PropertySourcesPlaceholderConfigurer serverConfiguration() {
 			Properties props = new Properties();
