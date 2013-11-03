@@ -1,11 +1,13 @@
 package com.example.dictionary;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 import java.util.Set;
 
 import javax.validation.ConstraintViolation;
 
+import org.hibernate.validator.internal.util.privilegedactions.GetAnnotationParameter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -16,6 +18,10 @@ public class Controller {
 
 	@Autowired
 	TranslationService transations;
+	
+	List<DictionaryWord> foundWords = new ArrayList<DictionaryWord>();
+	List<DictionaryWord> savedWords = new ArrayList<DictionaryWord>();
+	
 	
 	public void run() {
 		boolean ok = true;
@@ -37,8 +43,20 @@ public class Controller {
 					continue;
 				}
 				
-				List<DictionaryWord> words = transations.getDictionaryWords(params);
-				System.out.println(words);
+				foundWords = transations.getDictionaryWords(params);
+			} else if ("showAll".equals(params.getCommandName())) {
+				for (int i = 0; i<foundWords.size(); i++) {
+					DictionaryWord word = foundWords.get(i);
+					System.out.println(i + ") " + word.getPolishWord() + " :: " + word.getEnglishWord());
+				}
+			} else if ("showSaved".equals(params.getCommandName())) {
+				for (int i = 0; i<savedWords.size(); i++) {
+					DictionaryWord word = savedWords.get(i);
+					System.out.println(i + ") " + word.getPolishWord() + " :: " + word.getEnglishWord());
+				}
+			} else if ("save".equals(params.getCommandName())) {
+				Integer i = Integer.valueOf(params.getAttributes()[0]);
+				savedWords.add(foundWords.get(i));
 			}
 		}
 		s.close();
