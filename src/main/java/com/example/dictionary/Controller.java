@@ -7,7 +7,6 @@ import java.util.Set;
 
 import javax.validation.ConstraintViolation;
 
-import org.hibernate.validator.internal.util.privilegedactions.GetAnnotationParameter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -18,10 +17,11 @@ public class Controller {
 
 	@Autowired
 	TranslationService transations;
+
+	@Autowired
+	Repository repository;
 	
 	List<DictionaryWord> foundWords = new ArrayList<DictionaryWord>();
-	List<DictionaryWord> savedWords = new ArrayList<DictionaryWord>();
-	
 	
 	public void run() {
 		boolean ok = true;
@@ -44,19 +44,16 @@ public class Controller {
 				}
 				
 				foundWords = transations.getDictionaryWords(params);
-			} else if ("showAll".equals(params.getCommandName())) {
+			} else if ("show-all".equals(params.getCommandName())) {
 				for (int i = 0; i<foundWords.size(); i++) {
 					DictionaryWord word = foundWords.get(i);
 					System.out.println(i + ") " + word.getPolishWord() + " :: " + word.getEnglishWord());
 				}
-			} else if ("showSaved".equals(params.getCommandName())) {
-				for (int i = 0; i<savedWords.size(); i++) {
-					DictionaryWord word = savedWords.get(i);
-					System.out.println(i + ") " + word.getPolishWord() + " :: " + word.getEnglishWord());
-				}
+			} else if ("show-saved".equals(params.getCommandName())) {
+				repository.printSavedWords();
 			} else if ("save".equals(params.getCommandName())) {
 				Integer i = Integer.valueOf(params.getAttributes()[0]);
-				savedWords.add(foundWords.get(i));
+				repository.addWord(foundWords.get(i));
 			}
 		}
 		s.close();
