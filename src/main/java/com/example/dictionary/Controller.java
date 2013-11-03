@@ -8,9 +8,11 @@ import java.util.Set;
 import javax.validation.ConstraintViolation;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 import com.example.dictionary.model.DictionaryWord;
+import com.example.dictionary.repositories.Repository;
 
 @Component
 public class Controller {
@@ -19,6 +21,7 @@ public class Controller {
 	TranslationService transations;
 
 	@Autowired
+	@Qualifier("datasource")
 	Repository repository;
 	
 	List<DictionaryWord> foundWords = new ArrayList<DictionaryWord>();

@@ -1,14 +1,16 @@
-package com.example.dictionary;
+package com.example.dictionary.repositories;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 import com.example.dictionary.model.DictionaryWord;
 
 @Component
-public class Repository {
+@Qualifier("inmemory")
+public class InMemoryRepository extends Repository {
 
 	List<DictionaryWord> savedWords = new ArrayList<DictionaryWord>();
 	
@@ -20,10 +22,4 @@ public class Repository {
 		savedWords.add(word);
 	}
 
-	public void printSavedWords() {
-		for (int i = 0; i<savedWords.size(); i++) {
-			DictionaryWord word = savedWords.get(i);
-			System.out.println(i + ") " + word.getPolishWord() + " :: " + word.getEnglishWord());
-		}
-	}
 }
