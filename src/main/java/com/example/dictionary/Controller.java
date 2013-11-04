@@ -26,7 +26,7 @@ public class Controller {
 	TranslationService transations;
 
 	@Autowired
-	@Qualifier("datasource")
+	@Qualifier("hibernate")
 	Repository repository;
 
     @Autowired

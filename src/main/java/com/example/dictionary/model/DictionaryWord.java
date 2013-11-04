@@ -1,14 +1,47 @@
 package com.example.dictionary.model;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.NamedQuery;
+import javax.persistence.Table;
+
+@Entity
+@Table(name="words")
+@NamedQuery(name=DictionaryWord.GET_ALL_WORD, 
+		query="select w from DictionaryWord w")
 public class DictionaryWord {
+	
+	public final static String GET_ALL_WORD = "DictionaryWord.getAllWords";
+	
+	@Id
+	@GeneratedValue(strategy=GenerationType.AUTO)
+	private long id;
+
+	@Column(name="polish_word")
 	private String polishWord;
+	
+	@Column(name="english_word")
 	private String englishWord;
 
+	public DictionaryWord() {
+	}
+	
 	public DictionaryWord(Builder builder) {
 		this.polishWord = builder.polishWord;
 		this.englishWord = builder.englishWord;
 	}
 
+	public long getId() {
+		return id;
+	}
+	
+	public void setId(long id) {
+		this.id = id;
+	}
+	
 	public String getPolishWord() {
 		return polishWord;
 	}
