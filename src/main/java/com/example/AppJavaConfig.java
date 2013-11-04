@@ -1,7 +1,9 @@
 package com.example;
 
 import com.example.dictionary.Controller;
+import org.hibernate.SessionFactory;
 import org.hibernate.dialect.MySQL5Dialect;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -13,7 +15,9 @@ import org.springframework.context.support.AbstractApplicationContext;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
+import org.springframework.orm.hibernate3.HibernateTransactionManager;
 import org.springframework.orm.hibernate3.annotation.AnnotationSessionFactoryBean;
+import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
@@ -41,8 +45,8 @@ public class AppJavaConfig {
 				type = FilterType.ANNOTATION)
 	)
     @PropertySource("META-INF/spring/dict.properties")
-    @EnableTransactionManagement
 	@EnableAspectJAutoProxy
+	@EnableTransactionManagement
 	public static class AppConfiguration {
 
 		@Bean(name = "validator")
@@ -60,11 +64,6 @@ public class AppJavaConfig {
 			return ds;
 		}
 
-        @Bean
-        public DataSourceTransactionManager transactionManager(DataSource ds) {
-            return new DataSourceTransactionManager(ds);
-        }
-		
 		@Bean
 		public LocalContainerEntityManagerFactoryBean entityManagerFactory() {
             HibernateJpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
@@ -91,6 +90,28 @@ public class AppJavaConfig {
 			return session;
 		}
 
+        @Bean
+        @Qualifier("dsTxMgr")
+        public DataSourceTransactionManager transactionManager(DataSource ds) {
+            return new DataSourceTransactionManager(ds);
+        }
+
+		@Bean
+		@Qualifier("hibernateTxMgr")
+		public HibernateTransactionManager hibernateTxManager(SessionFactory factory) {
+			HibernateTransactionManager tx = new HibernateTransactionManager();
+			tx.setSessionFactory(factory);
+			return tx;
+		}
+		
+		@Bean
+		@Qualifier("jpaTxMgr")
+		public JpaTransactionManager jpaTxManager() {
+			JpaTransactionManager tx = new JpaTransactionManager();
+			tx.setEntityManagerFactory(entityManagerFactory().getObject());
+			return tx;
+		}
+		
 		@Bean
 		public PropertySourcesPlaceholderConfigurer properties() {
 			return new PropertySourcesPlaceholderConfigurer();

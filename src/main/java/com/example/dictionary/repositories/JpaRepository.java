@@ -1,14 +1,13 @@
 package com.example.dictionary.repositories;
 
-import java.util.List;
+import com.example.dictionary.model.DictionaryWord;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.stereotype.Component;
-
-import com.example.dictionary.model.DictionaryWord;
+import java.util.List;
 
 @Component
 @Qualifier("jpa")
@@ -22,8 +21,9 @@ public class JpaRepository extends Repository {
 				.getResultList();
 	}
 
+	@Transactional("jpaTxMgr")
 	public void addWord(DictionaryWord word) {
-		//..
+		em.persist(word);
 	}
 
 }

@@ -36,7 +36,7 @@ public class Controller {
 	List<DictionaryWord> foundWords = new ArrayList<DictionaryWord>();
 
     @Autowired
-    public Controller(PlatformTransactionManager txManager) {
+    public Controller(@Qualifier("hibernateTxMgr") PlatformTransactionManager txManager) {
         transactionTemplate = new TransactionTemplate(txManager);
     }
 

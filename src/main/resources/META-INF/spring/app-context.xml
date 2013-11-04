@@ -2,8 +2,8 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:context="http://www.springframework.org/schema/context"
-       xmlns:aop="http://www.springframework.org/schema/aop"
        xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:aop="http://www.springframework.org/schema/aop"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
 		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.0.xsd
 		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.0.xsd
@@ -11,8 +11,10 @@
 
     <description>Example configuration to get you started.</description>
 
-    <context:component-scan base-package="com.example.dictionary, com.example.helloworld"/>
-    <context:property-placeholder location="classpath:META-INF/spring/dict.properties"/>
+    <context:component-scan
+            base-package="com.example.dictionary, com.example.helloworld"/>
+    <context:property-placeholder
+            location="classpath:META-INF/spring/dict.properties"/>
 
     <aop:aspectj-autoproxy/>
 
@@ -25,13 +27,6 @@
         <property name="username" value="root"/>
         <property name="password" value="root"/>
     </bean>
-
-    <bean id="txManager"
-          class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
-        <property name="dataSource" ref="dataSource"/>
-    </bean>
-
-    <tx:annotation-driven/>
 
     <bean id="vendorAdapter"
           class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter">
@@ -58,6 +53,26 @@
                 <prop key="show_sql">true</prop>
             </props>
         </property>
+    </bean>
+
+    <tx:annotation-driven/>
+
+    <bean id="txManager"
+          class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="dataSource"/>
+        <qualifier value="dsTxMgr"/>
+    </bean>
+
+    <bean class="org.springframework.orm.jpa.JpaTransactionManager"
+          id="jpaTxManager">
+        <property name="entityManagerFactory" ref="entityManagerFactory"/>
+        <qualifier value="jpaTxMgr"/>
+    </bean>
+
+    <bean class="org.springframework.orm.hibernate3.HibernateTransactionManager"
+          id="hibernateTxManager">
+        <property name="sessionFactory" ref="sessionFactory"/>
+        <qualifier value="hibernateTxMgr"/>
     </bean>
 
 </beans>
