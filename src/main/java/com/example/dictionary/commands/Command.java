@@ -15,11 +15,14 @@ public abstract class Command {
 		this.params = params;
 	}
 	
-	
 	public CommandParameters getParams() {
 		return params;
 	}
 
+	public boolean isValid() {
+		return getErrors().isEmpty();
+	}
+	
 	public void printErrorInformation() {
 		for (ConstraintViolation<CommandParameters> e: getErrors()) {
 			System.out.println("Field [name="+e.getPropertyPath()+"]: "+e.getMessage());
@@ -28,6 +31,5 @@ public abstract class Command {
 	
 	abstract public Set<ConstraintViolation<CommandParameters>> getErrors();
 	abstract public TranslationProcess execute(TranslationProcess process);
-	abstract public boolean isValid();
 	
 }

@@ -50,11 +50,6 @@ public class TranslationCommand extends Command {
 	}
 
 	@Override
-	public boolean isValid() {
-		return validator.validate(params, SearchValidationGroup.class).isEmpty();
-	}
-
-	@Override
 	public Set<ConstraintViolation<CommandParameters>> getErrors() {
 		return validator.validate(params, SearchValidationGroup.class);
 	}

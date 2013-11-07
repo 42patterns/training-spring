@@ -33,11 +33,6 @@ public class ShowSavedWordsCommand extends Command {
 	}
 
 	@Override
-	public boolean isValid() {
-		return true;
-	}
-
-	@Override
 	public Set<ConstraintViolation<CommandParameters>> getErrors() {
 		return Collections.emptySet();
 	}
