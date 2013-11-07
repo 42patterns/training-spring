@@ -1,4 +1,4 @@
-package com.example.dictionary;
+package com.example.dictionary.commands;
 
 import static org.junit.Assert.*;
 
@@ -17,8 +17,9 @@ import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import com.example.dictionary.TranslationServiceFeatureMockedTest.JavaConfiguration;
+import com.example.dictionary.CommandParameters;
 import com.example.dictionary.commands.TranslationCommand;
+import com.example.dictionary.commands.TranslationCommandFeatureMockedTest.JavaConfiguration;
 import com.example.dictionary.config.GenericTestConfiguration;
 import com.example.dictionary.model.DictionaryWord;
 import com.example.dictionary.model.TranslationProcess;
@@ -27,7 +28,7 @@ import com.github.rmannibucau.featuredmock.http.FeaturedHttpServerBuilder;
 
 @ContextConfiguration(classes = JavaConfiguration.class)
 @RunWith(SpringJUnit4ClassRunner.class)
-public class TranslationServiceFeatureMockedTest {
+public class TranslationCommandFeatureMockedTest {
 
 	@Autowired
 	BeanFactory factory;

@@ -1,7 +1,7 @@
-package com.example.dictionary;
+package com.example.dictionary.commands;
 
-import com.example.dictionary.TranslationServiceLocalFileTest.JavaConfiguration;
-import com.example.dictionary.commands.TranslationCommand;
+import com.example.dictionary.CommandParameters;
+import com.example.dictionary.commands.TranslationCommandLocalFileTest.JavaConfiguration;
 import com.example.dictionary.config.GenericTestConfiguration;
 import com.example.dictionary.model.DictionaryWord;
 import com.example.dictionary.model.TranslationProcess;
@@ -22,7 +22,7 @@ import static org.junit.Assert.*;
 
 @ContextConfiguration(classes = JavaConfiguration.class)
 @RunWith(SpringJUnit4ClassRunner.class)
-public class TranslationServiceLocalFileTest {
+public class TranslationCommandLocalFileTest {
 
 	@Autowired
 	BeanFactory factory;

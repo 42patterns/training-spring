@@ -1,6 +1,6 @@
-package com.example.dictionary;
+package com.example.dictionary.commands;
 
-import com.example.dictionary.commands.TranslationCommand;
+import com.example.dictionary.CommandParameters;
 import com.example.dictionary.config.GenericTestConfiguration;
 import com.example.dictionary.model.DictionaryWord;
 import com.example.dictionary.model.TranslationProcess;
@@ -19,34 +19,32 @@ import java.util.List;
 
 import static org.junit.Assert.*;
 
-@ContextConfiguration(classes = TranslationServiceTest.JavaConfiguration.class)
+@ContextConfiguration(classes = TranslationCommandTest.JavaConfiguration.class)
 @RunWith(SpringJUnit4ClassRunner.class)
-public class TranslationServiceTest {
+public class TranslationCommandTest {
 
     @Autowired
-	BeanFactory factory;
+    BeanFactory factory;
 
-	@Test
-	public void bookTranslationTest() {
-		TranslationProcess process = new TranslationProcess();
-		TranslationCommand command = (TranslationCommand) factory.getBean(
-				"translationCommand", new CommandParameters("search book"));
-		process = command.execute(process);
+    @Test
+    public void bookTranslationTest() {
+        TranslationProcess process = new TranslationProcess();
+        TranslationCommand command = (TranslationCommand) factory.getBean(
+                "translationCommand", new CommandParameters("search book"));
+        process = command.execute(process);
 
-		List<DictionaryWord> dictionaryWords = process.getWords();
-		assertEquals(24, dictionaryWords.size());
-		assertEquals("książka", dictionaryWords.get(1).getPolishWord());
-	}
-	
-	
-	@Configuration
-    @PropertySource("META-INF/spring/dict.properties")
+        List<DictionaryWord> dictionaryWords = process.getWords();
+        assertEquals(24, dictionaryWords.size());
+        assertEquals("książka", dictionaryWords.get(1).getPolishWord());
+    }
+
+    @Configuration
+    @PropertySource("classpath:META-INF/spring/dict.properties")
     public static class JavaConfiguration extends GenericTestConfiguration {
 
         @Bean
-        public PropertySourcesPlaceholderConfigurer properties() {
+        public static PropertySourcesPlaceholderConfigurer properties() {
             return new PropertySourcesPlaceholderConfigurer();
         }
-
-	}
+    }
 }

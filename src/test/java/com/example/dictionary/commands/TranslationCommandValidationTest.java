@@ -1,4 +1,4 @@
-package com.example.dictionary;
+package com.example.dictionary.commands;
 
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.*;
@@ -15,11 +15,11 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 
-import com.example.dictionary.commands.TranslationCommand;
+import com.example.dictionary.CommandParameters;
 
 @ContextConfiguration(classes = {TranslationCommand.class, LocalValidatorFactoryBean.class})
 @RunWith(SpringJUnit4ClassRunner.class)
-public class TranslationServiceValidationTest {
+public class TranslationCommandValidationTest {
 
 	@Autowired
 	BeanFactory factory;
