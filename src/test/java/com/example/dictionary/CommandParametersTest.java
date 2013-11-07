@@ -2,7 +2,6 @@ package com.example.dictionary;
 
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.*;
-import static org.junit.matchers.JUnitMatchers.*;
 
 import org.junit.Test;
 

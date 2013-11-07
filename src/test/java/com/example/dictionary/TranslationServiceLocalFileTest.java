@@ -1,6 +1,7 @@
 package com.example.dictionary;
 
 import com.example.dictionary.TranslationServiceLocalFileTest.JavaConfiguration;
+import com.example.dictionary.commands.TranslationCommand;
 import com.example.dictionary.config.GenericTestConfiguration;
 import com.example.dictionary.model.DictionaryWord;
 import com.example.dictionary.model.TranslationProcess;
@@ -24,16 +25,14 @@ import static org.junit.Assert.*;
 public class TranslationServiceLocalFileTest {
 
 	@Autowired
-	TranslationService service;
-
-	@Autowired
 	BeanFactory factory;
 	
 	@Test
 	public void bookTranslationTest() {
-		TranslationProcess process = (TranslationProcess) factory.getBean(
-				"translationProcess", new CommandParameters("search book"));
-		process = service.getDictionaryWords(process);
+		TranslationProcess process = new TranslationProcess();
+		TranslationCommand command = (TranslationCommand) factory.getBean(
+				"translationCommand", new CommandParameters("search book"));
+		process = command.execute(process);
 
 		List<DictionaryWord> dictionaryWords = process.getWords();
 		

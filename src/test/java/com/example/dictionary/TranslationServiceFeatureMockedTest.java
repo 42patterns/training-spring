@@ -18,6 +18,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.example.dictionary.TranslationServiceFeatureMockedTest.JavaConfiguration;
+import com.example.dictionary.commands.TranslationCommand;
 import com.example.dictionary.config.GenericTestConfiguration;
 import com.example.dictionary.model.DictionaryWord;
 import com.example.dictionary.model.TranslationProcess;
@@ -27,9 +28,6 @@ import com.github.rmannibucau.featuredmock.http.FeaturedHttpServerBuilder;
 @ContextConfiguration(classes = JavaConfiguration.class)
 @RunWith(SpringJUnit4ClassRunner.class)
 public class TranslationServiceFeatureMockedTest {
-
-	@Autowired
-	TranslationService service;
 
 	@Autowired
 	BeanFactory factory;
@@ -48,10 +46,11 @@ public class TranslationServiceFeatureMockedTest {
 	
 	@Test
 	public void bookTranslationTest() {
-		TranslationProcess process = (TranslationProcess) factory.getBean(
-				"translationProcess", new CommandParameters("search book"));
-		process = service.getDictionaryWords(process);
-
+		TranslationProcess process = new TranslationProcess();
+		TranslationCommand command = (TranslationCommand) factory.getBean(
+				"translationCommand", new CommandParameters("search book"));
+		process = command.execute(process);
+		
 		List<DictionaryWord> dictionaryWords = process.getWords();
 		assertEquals(24, dictionaryWords.size());
 		assertEquals("książka", dictionaryWords.get(1).getPolishWord());

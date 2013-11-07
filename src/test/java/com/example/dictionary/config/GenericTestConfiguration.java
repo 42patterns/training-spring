@@ -1,9 +1,8 @@
 package com.example.dictionary.config;
 
 import com.example.dictionary.CommandParameters;
-import com.example.dictionary.TranslationService;
+import com.example.dictionary.commands.TranslationCommand;
 import com.example.dictionary.file.FileService;
-import com.example.dictionary.model.TranslationProcess;
 import com.example.dictionary.repositories.InMemoryRepository;
 import com.example.dictionary.repositories.Repository;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -49,14 +48,9 @@ public class GenericTestConfiguration {
 	}
 	
 	@Bean
-	@Scope(BeanDefinition.SCOPE_PROTOTYPE)
-	public TranslationProcess translationProcess(CommandParameters params) {
-		return new TranslationProcess(params);
-	}
-
-	@Bean
-	public TranslationService service() {
-		return new TranslationService();
+	@Scope(value=BeanDefinition.SCOPE_PROTOTYPE)
+	public TranslationCommand translationCommand(CommandParameters params) {
+		return new TranslationCommand(params);
 	}
 
     @Bean

@@ -1,8 +1,6 @@
 package com.example.helloworld;
 
-import static org.junit.Assert.assertNotNull;
-
-import com.example.helloworld.Service;
+import static org.junit.Assert.*;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;

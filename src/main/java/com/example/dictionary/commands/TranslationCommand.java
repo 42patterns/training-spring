@@ -1,4 +1,4 @@
-package com.example.dictionary;
+package com.example.dictionary.commands;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -18,15 +18,20 @@ import javax.validation.Validator;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.beans.factory.config.BeanDefinition;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
+import com.example.dictionary.CommandParameters;
 import com.example.dictionary.model.DictionaryWord;
 import com.example.dictionary.model.TranslationProcess;
 import com.example.dictionary.validation.SearchValidationGroup;
 
 @Component
-public class TranslationService {
-	private static Logger log = Logger.getLogger(TranslationService.class);
+@Scope(value=BeanDefinition.SCOPE_PROTOTYPE)
+public class TranslationCommand extends Command {
+
+	private static Logger log = Logger.getLogger(TranslationCommand.class);
 
 	@Value("${urlStringTemplate}")
 	private String urlStringTemplate;
@@ -36,12 +41,26 @@ public class TranslationService {
 	
 	private BufferedReader bufferedReader;
 
-	public Set<ConstraintViolation<CommandParameters>> validate(CommandParameters params) {
+	public TranslationCommand() {
+		super(new CommandParameters("search"));
+	}
+
+	public TranslationCommand(CommandParameters params) {
+		super(params);
+	}
+
+	@Override
+	public boolean isValid() {
+		return validator.validate(params, SearchValidationGroup.class).isEmpty();
+	}
+
+	@Override
+	public Set<ConstraintViolation<CommandParameters>> getErrors() {
 		return validator.validate(params, SearchValidationGroup.class);
 	}
 	
-	public TranslationProcess getDictionaryWords(TranslationProcess process) {
-		Iterator<String> iterator = getWords(process.getParams()).iterator();
+	public TranslationProcess execute(TranslationProcess process) {
+		Iterator<String> iterator = getWords(params).iterator();
 		List<DictionaryWord> words = new ArrayList<DictionaryWord>();
 		
 		while (iterator.hasNext()) {
