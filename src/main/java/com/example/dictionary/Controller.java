@@ -29,6 +29,7 @@ public class Controller {
 
 			Command c = commandFactory.getCommand(new CommandParameters(command));
 			if (!c.isValid()) {
+				c.printErrorInformation();
 				continue;
 			}
 			
