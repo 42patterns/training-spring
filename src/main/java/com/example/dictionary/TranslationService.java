@@ -21,6 +21,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import com.example.dictionary.model.DictionaryWord;
+import com.example.dictionary.model.TranslationProcess;
 import com.example.dictionary.validation.SearchValidationGroup;
 
 @Component
@@ -39,8 +40,8 @@ public class TranslationService {
 		return validator.validate(params, SearchValidationGroup.class);
 	}
 	
-	public List<DictionaryWord> getDictionaryWords(CommandParameters params) {
-		Iterator<String> iterator = getWords(params).iterator();
+	public TranslationProcess getDictionaryWords(TranslationProcess process) {
+		Iterator<String> iterator = getWords(process.getParams()).iterator();
 		List<DictionaryWord> words = new ArrayList<DictionaryWord>();
 		
 		while (iterator.hasNext()) {
@@ -51,10 +52,11 @@ public class TranslationService {
 			words.add(word);
 		}
 		
-		return words;
+		process.setWords(words);
+		return process;
 	}
 	
-	public List<String> getWords(CommandParameters params) {
+	private List<String> getWords(CommandParameters params) {
 		List<String> words = new ArrayList<String>();
 		prepareBufferedReader(params.getAttributes());
 		

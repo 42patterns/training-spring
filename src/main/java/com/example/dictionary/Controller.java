@@ -1,21 +1,11 @@
 package com.example.dictionary;
 
-import com.example.dictionary.file.FileRollbackHandler;
-import com.example.dictionary.file.FileService;
-import com.example.dictionary.model.DictionaryWord;
-import com.example.dictionary.repositories.Repository;
+import com.example.dictionary.model.TranslationProcess;
+import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.PlatformTransactionManager;
-import org.springframework.transaction.TransactionStatus;
-import org.springframework.transaction.support.TransactionCallback;
-import org.springframework.transaction.support.TransactionSynchronizationManager;
-import org.springframework.transaction.support.TransactionTemplate;
 
 import javax.validation.ConstraintViolation;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Scanner;
 import java.util.Set;
 
@@ -26,28 +16,19 @@ public class Controller {
 	TranslationService transations;
 
 	@Autowired
-	@Qualifier("hibernate")
-	Repository repository;
-
-    @Autowired
-    FileService fileService;
-
-    TransactionTemplate transactionTemplate;
-	List<DictionaryWord> foundWords = new ArrayList<DictionaryWord>();
-
-    @Autowired
-    public Controller(@Qualifier("hibernateTxMgr") PlatformTransactionManager txManager) {
-        transactionTemplate = new TransactionTemplate(txManager);
-    }
-
+	BeanFactory factory;
+	
 	public void run() {
 		boolean ok = true;
 		Scanner s = new Scanner(System.in);
+		TranslationProcess process = factory.getBean(TranslationProcess.class);
+		
 		while (ok) {
 			System.out.print("dictionary > ");
 			String command = s.nextLine();
-			
+
 			CommandParameters params = new CommandParameters(command);
+			process.setParams(params);
 			
 			if ("exit".equals(params.getCommandName())) {
 				ok = false;
@@ -59,30 +40,15 @@ public class Controller {
 					}
 					continue;
 				}
-				
-				foundWords = transations.getDictionaryWords(params);
+
+				process = (TranslationProcess) factory.getBean("translationProcess", params);
+				process = transations.getDictionaryWords(process);
 			} else if ("show-all".equals(params.getCommandName())) {
-				for (int i = 0; i<foundWords.size(); i++) {
-					DictionaryWord word = foundWords.get(i);
-					System.out.println(i + ") " + word.getPolishWord() + " :: " + word.getEnglishWord());
-				}
+				process.showAllWords();
 			} else if ("show-saved".equals(params.getCommandName())) {
-				repository.printSavedWords();
+				process.printSavedWords();
 			} else if ("save".equals(params.getCommandName())) {
-				final Integer i = Integer.valueOf(params.getAttributes()[0]);
-
-                transactionTemplate.execute(new TransactionCallback<Void>() {
-                    @Override
-                    public Void doInTransaction(TransactionStatus status) {
-
-                        DictionaryWord word = foundWords.get(i);
-                        String filename = fileService.createFile(word.toString());
-                        TransactionSynchronizationManager.registerSynchronization(new FileRollbackHandler(filename));
-                        repository.addWord(word);
-
-                        return null;  //To change body of implemented methods use File | Settings | File Templates.
-                    }
-                });
+				process.saveWord();
 			}
 		}
 		s.close();
