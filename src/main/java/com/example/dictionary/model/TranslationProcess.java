@@ -34,6 +34,7 @@ public class TranslationProcess {
 
     private List<DictionaryWord> words;
     private CommandParameters params;
+    private boolean running = true;
 
     public TranslationProcess() {
     }
@@ -48,6 +49,14 @@ public class TranslationProcess {
 
     public void setParams(CommandParameters params) {
         this.params = params;
+    }
+
+    public boolean isRunning() {
+        return running;
+    }
+
+    public void setRunning(boolean running) {
+        this.running = running;
     }
 
     public List<DictionaryWord> getWords() {

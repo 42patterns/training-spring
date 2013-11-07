@@ -23,7 +23,7 @@ public class Controller {
 		Scanner s = new Scanner(System.in);
 		TranslationProcess process = factory.getBean(TranslationProcess.class);
 		
-		while (ok) {
+		while (process.isRunning()) {
 			System.out.print("dictionary > ");
 			String command = s.nextLine();
 
@@ -31,7 +31,7 @@ public class Controller {
 			process.setParams(params);
 			
 			if ("exit".equals(params.getCommandName())) {
-				ok = false;
+				process.setRunning(false);
 			} else if ("search".equals(params.getCommandName())) {
 				Set<ConstraintViolation<CommandParameters>> errors = transations.validate(params);
 				if (!errors.isEmpty()) {
