@@ -25,7 +25,7 @@ public class CommandFactory {
 			return (SaveWordsCommand) factory.getBean("saveWordsCommand", params);
 		}
 		
-		throw new IllegalArgumentException("Command not found");
+		return (VoidCommand) factory.getBean("voidCommand", params);
 	}
 
 }
