@@ -29,11 +29,11 @@ public class TranslationCommandValidationTest {
 		TranslationCommand service = (TranslationCommand) factory.getBean(
 				"translationCommand", new CommandParameters("search"));
 		
-		Set<ConstraintViolation<CommandParameters>> errors = service.getErrors();
+		Set<ConstraintViolation<?>> errors = service.getErrors();
 		assertThat(errors.isEmpty(), is(false));
 		assertThat(errors.size(), is(1));
 		
-		ConstraintViolation<CommandParameters> violation = errors.iterator().next();
+		ConstraintViolation<?> violation = errors.iterator().next();
 		assertThat(violation.getMessageTemplate(), is("{javax.validation.constraints.Size.message}"));
 	}
 	
@@ -43,7 +43,7 @@ public class TranslationCommandValidationTest {
 				"translationCommand", new CommandParameters("search book"));
 
 		
-		Set<ConstraintViolation<CommandParameters>> errors = service.getErrors();
+		Set<ConstraintViolation<?>> errors = service.getErrors();
 		assertThat(errors.isEmpty(), is(true));
 	}
 	

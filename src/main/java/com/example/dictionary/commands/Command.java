@@ -24,12 +24,12 @@ public abstract class Command {
 	}
 	
 	public void printErrorInformation() {
-		for (ConstraintViolation<CommandParameters> e: getErrors()) {
+		for (ConstraintViolation<?> e: getErrors()) {
 			System.out.println("Field [name="+e.getPropertyPath()+"]: "+e.getMessage());
 		}
 	}
 	
-	abstract public Set<ConstraintViolation<CommandParameters>> getErrors();
+	abstract public Set<ConstraintViolation<?>> getErrors();
 	abstract public TranslationProcess execute(TranslationProcess process);
 	
 }

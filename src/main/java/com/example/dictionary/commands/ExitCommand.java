@@ -26,7 +26,7 @@ public class ExitCommand extends Command {
 	}
 
 	@Override
-	public Set<ConstraintViolation<CommandParameters>> getErrors() {
+	public Set<ConstraintViolation<?>> getErrors() {
 		return Collections.emptySet();
 	}
 

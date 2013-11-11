@@ -6,6 +6,7 @@ import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
@@ -50,8 +51,9 @@ public class TranslationCommand extends Command {
 	}
 
 	@Override
-	public Set<ConstraintViolation<CommandParameters>> getErrors() {
-		return validator.validate(params, SearchValidationGroup.class);
+	public Set<ConstraintViolation<?>> getErrors() {
+		Set<ConstraintViolation<CommandParameters>> errors = validator.validate(params, SearchValidationGroup.class);
+		return new HashSet<ConstraintViolation<?>>(errors);
 	}
 	
 	public TranslationProcess execute(TranslationProcess process) {
