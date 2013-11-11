@@ -19,7 +19,6 @@ public class Controller {
 	BeanFactory factory;
 	
 	public void run() {
-		boolean ok = true;
 		Scanner s = new Scanner(System.in);
 		TranslationProcess process = new TranslationProcess();
 		
