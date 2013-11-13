@@ -2,7 +2,6 @@ package com.example.dictionary;
 
 import com.example.dictionary.commands.Command;
 import com.example.dictionary.commands.CommandFactory;
-import com.example.dictionary.model.TranslationProcess;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -25,14 +24,16 @@ public class Controller {
 		while (process.isRunning()) {
 			System.out.print("dictionary > ");
 			String command = s.nextLine();
+			
+			process.setParams(new CommandParameters(command));
 
-			Command c = commandFactory.getCommand(new CommandParameters(command));
+			Command c = commandFactory.getCommand(process);
 			if (!c.isValid()) {
 				c.printErrorInformation();
 				continue;
 			}
 			
-			process = c.execute(process);
+			process = c.execute();
 		}
 		s.close();
 	}

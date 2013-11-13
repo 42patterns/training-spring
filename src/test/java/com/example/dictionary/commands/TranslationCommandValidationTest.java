@@ -16,6 +16,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 
 import com.example.dictionary.CommandParameters;
+import com.example.dictionary.TranslationProcess;
 
 @ContextConfiguration(classes = {TranslationCommand.class, LocalValidatorFactoryBean.class})
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -26,10 +27,11 @@ public class TranslationCommandValidationTest {
 	
 	@Test
 	public void noAttributesCommand() {
+		TranslationProcess process = TranslationProcess.fromCommandParameters(new CommandParameters("search"));
 		TranslationCommand service = (TranslationCommand) factory.getBean(
-				"translationCommand", new CommandParameters("search"));
+				"translationCommand", process);
 		
-		Set<ConstraintViolation<?>> errors = service.getErrors();
+		Set<ConstraintViolation<? extends Command>> errors = service.getErrors();
 		assertThat(errors.isEmpty(), is(false));
 		assertThat(errors.size(), is(1));
 		
@@ -39,11 +41,12 @@ public class TranslationCommandValidationTest {
 	
 	@Test
 	public void validCommand() {
+		TranslationProcess process = TranslationProcess.fromCommandParameters(new CommandParameters("search book"));
 		TranslationCommand service = (TranslationCommand) factory.getBean(
-				"translationCommand", new CommandParameters("search book"));
+				"translationCommand", process);
 
 		
-		Set<ConstraintViolation<?>> errors = service.getErrors();
+		Set<ConstraintViolation<? extends Command>> errors = service.getErrors();
 		assertThat(errors.isEmpty(), is(true));
 	}
 	

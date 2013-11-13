@@ -11,8 +11,7 @@ import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import com.example.dictionary.CommandParameters;
-import com.example.dictionary.model.TranslationProcess;
+import com.example.dictionary.TranslationProcess;
 import com.example.dictionary.repositories.Repository;
 
 @Component
@@ -23,17 +22,17 @@ public class ShowSavedWordsCommand extends Command {
 	@Qualifier("jpa")
 	Repository repository;
 
-	public ShowSavedWordsCommand(CommandParameters params) {
-		super(params);
+	public ShowSavedWordsCommand(TranslationProcess process) {
+		super(process);
 	}
 
-	public TranslationProcess execute(TranslationProcess process) {
+	public TranslationProcess execute() {
 		repository.printSavedWords();
 		return process;
 	}
 
 	@Override
-	public Set<ConstraintViolation<?>> getErrors() {
+	public Set<ConstraintViolation<? extends Command>> getErrors() {
 		return Collections.emptySet();
 	}
 

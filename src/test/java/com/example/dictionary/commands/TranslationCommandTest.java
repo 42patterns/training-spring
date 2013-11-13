@@ -1,9 +1,9 @@
 package com.example.dictionary.commands;
 
 import com.example.dictionary.CommandParameters;
+import com.example.dictionary.TranslationProcess;
 import com.example.dictionary.config.GenericTestConfiguration;
 import com.example.dictionary.model.DictionaryWord;
-import com.example.dictionary.model.TranslationProcess;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.BeanFactory;
@@ -23,28 +23,29 @@ import static org.junit.Assert.*;
 @RunWith(SpringJUnit4ClassRunner.class)
 public class TranslationCommandTest {
 
-    @Autowired
-    BeanFactory factory;
+	@Autowired
+	BeanFactory factory;
 
-    @Test
-    public void bookTranslationTest() {
-        TranslationProcess process = new TranslationProcess();
-        TranslationCommand command = (TranslationCommand) factory.getBean(
-                "translationCommand", new CommandParameters("search book"));
-        process = command.execute(process);
+	@Test
+	public void bookTranslationTest() {
+		TranslationProcess process = TranslationProcess.fromCommandParameters(new CommandParameters("search book"));
+		TranslationCommand command = (TranslationCommand) factory.getBean(
+				"translationCommand", process);
+		process = command.execute();
 
-        List<DictionaryWord> dictionaryWords = process.getWords();
-        assertEquals(24, dictionaryWords.size());
-        assertEquals("książka", dictionaryWords.get(1).getPolishWord());
-    }
+		List<DictionaryWord> dictionaryWords = process.getWords();
+		assertEquals(24, dictionaryWords.size());
+		assertEquals("książka", dictionaryWords.get(1).getPolishWord());
+	}
 
-    @Configuration
-    @PropertySource("classpath:META-INF/spring/dict.properties")
-    public static class JavaConfiguration extends GenericTestConfiguration {
+	@Configuration
+	@PropertySource("classpath:META-INF/spring/dict.properties")
+	public static class JavaConfiguration extends GenericTestConfiguration {
 
-        @Bean
-        public static PropertySourcesPlaceholderConfigurer properties() {
-            return new PropertySourcesPlaceholderConfigurer();
-        }
-    }
+		@Bean
+		public static PropertySourcesPlaceholderConfigurer properties() {
+			return new PropertySourcesPlaceholderConfigurer();
+		}
+	}
+
 }

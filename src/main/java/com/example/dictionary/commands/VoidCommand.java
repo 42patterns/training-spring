@@ -11,8 +11,7 @@ import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import com.example.dictionary.CommandParameters;
-import com.example.dictionary.model.TranslationProcess;
+import com.example.dictionary.TranslationProcess;
 import com.example.dictionary.validator.NotValidCommand;
 
 @Component
@@ -23,18 +22,18 @@ public class VoidCommand extends Command {
 	@Autowired
 	Validator validator;
 	
-	public VoidCommand(CommandParameters params) {
-		super(params);
+	public VoidCommand(TranslationProcess process) {
+		super(process);
 	}
 
 	@Override
-	public Set<ConstraintViolation<?>> getErrors() {
+	public Set<ConstraintViolation<? extends Command>> getErrors() {
 		Set<ConstraintViolation<VoidCommand>> errors = validator.validate(this);
-		return new HashSet<ConstraintViolation<?>>(errors);
+		return new HashSet<ConstraintViolation<? extends Command>>(errors);
 	}
 	
 	@Override
-	public TranslationProcess execute(TranslationProcess process) {
+	public TranslationProcess execute() {
 		return process;
 	}
 

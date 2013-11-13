@@ -3,20 +3,26 @@ package com.example.dictionary.commands;
 import java.util.Set;
 
 import javax.validation.ConstraintViolation;
+import javax.validation.Valid;
 
 import com.example.dictionary.CommandParameters;
-import com.example.dictionary.model.TranslationProcess;
+import com.example.dictionary.TranslationProcess;
 
 public abstract class Command {
 
-	protected CommandParameters params;
+	@Valid
+	protected TranslationProcess process;
 	
-	public Command(CommandParameters params) {
-		this.params = params;
+	public Command(TranslationProcess process) {
+		this.process = process;
 	}
-	
+
+	public TranslationProcess getProcess() {
+		return process;
+	}
+
 	public CommandParameters getParams() {
-		return params;
+		return process.getParams();
 	}
 
 	public boolean isValid() {
@@ -29,7 +35,7 @@ public abstract class Command {
 		}
 	}
 	
-	abstract public Set<ConstraintViolation<?>> getErrors();
-	abstract public TranslationProcess execute(TranslationProcess process);
+	abstract public Set<ConstraintViolation<? extends Command>> getErrors();
+	abstract public TranslationProcess execute();
 	
 }

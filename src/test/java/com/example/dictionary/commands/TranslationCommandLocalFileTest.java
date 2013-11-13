@@ -1,10 +1,10 @@
 package com.example.dictionary.commands;
 
 import com.example.dictionary.CommandParameters;
+import com.example.dictionary.TranslationProcess;
 import com.example.dictionary.commands.TranslationCommandLocalFileTest.JavaConfiguration;
 import com.example.dictionary.config.GenericTestConfiguration;
 import com.example.dictionary.model.DictionaryWord;
-import com.example.dictionary.model.TranslationProcess;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.BeanFactory;
@@ -29,10 +29,10 @@ public class TranslationCommandLocalFileTest {
 	
 	@Test
 	public void bookTranslationTest() {
-		TranslationProcess process = new TranslationProcess();
+		TranslationProcess process = TranslationProcess.fromCommandParameters(new CommandParameters("search book"));
 		TranslationCommand command = (TranslationCommand) factory.getBean(
-				"translationCommand", new CommandParameters("search book"));
-		process = command.execute(process);
+				"translationCommand", process);
+		process = command.execute();
 
 		List<DictionaryWord> dictionaryWords = process.getWords();
 		

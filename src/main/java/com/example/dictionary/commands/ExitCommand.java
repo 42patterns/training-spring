@@ -9,24 +9,23 @@ import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import com.example.dictionary.CommandParameters;
-import com.example.dictionary.model.TranslationProcess;
+import com.example.dictionary.TranslationProcess;
 
 @Component
 @Scope(value=BeanDefinition.SCOPE_PROTOTYPE)
 public class ExitCommand extends Command {
 
-	public ExitCommand(CommandParameters params) {
-		super(params);
+	public ExitCommand(TranslationProcess process) {
+		super(process);
 	}
 
-	public TranslationProcess execute(TranslationProcess process) {
+	public TranslationProcess execute() {
 		process.setRunning(false);
 		return process;
 	}
 
 	@Override
-	public Set<ConstraintViolation<?>> getErrors() {
+	public Set<ConstraintViolation<? extends Command>> getErrors() {
 		return Collections.emptySet();
 	}
 

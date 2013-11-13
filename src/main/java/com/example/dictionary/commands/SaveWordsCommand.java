@@ -1,10 +1,9 @@
 package com.example.dictionary.commands;
 
-import com.example.dictionary.CommandParameters;
 import com.example.dictionary.file.FileRollbackHandler;
 import com.example.dictionary.file.FileService;
 import com.example.dictionary.model.DictionaryWord;
-import com.example.dictionary.model.TranslationProcess;
+import com.example.dictionary.TranslationProcess;
 import com.example.dictionary.repositories.Repository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -28,7 +27,7 @@ public class SaveWordsCommand extends Command {
 
 	@Autowired
 	@Qualifier("jpa")
-	Repository repository;
+    Repository repository;
 
     @Autowired
     FileService fileService;
@@ -37,11 +36,13 @@ public class SaveWordsCommand extends Command {
     @Qualifier("jpaTxMgr")
     PlatformTransactionManager txManager;
 
-	public SaveWordsCommand(CommandParameters params) {
-		super(params);
-	}
+    public SaveWordsCommand(TranslationProcess process) {
+        super(process);
+    }
 
-	public TranslationProcess execute(final TranslationProcess process) {
+    @Override
+	public TranslationProcess execute() {
+        final TranslationProcess process = this.process;
         final Integer i = Integer.valueOf(getParams().getAttributes()[0]);
 
         TransactionTemplate transactionTemplate = new TransactionTemplate(txManager);
@@ -61,7 +62,7 @@ public class SaveWordsCommand extends Command {
 	}
 
 	@Override
-	public Set<ConstraintViolation<?>> getErrors() {
+	public Set<ConstraintViolation<? extends Command>> getErrors() {
 		return Collections.emptySet();
 	}
 	

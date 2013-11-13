@@ -1,6 +1,6 @@
 package com.example.dictionary.config;
 
-import com.example.dictionary.CommandParameters;
+import com.example.dictionary.TranslationProcess;
 import com.example.dictionary.commands.TranslationCommand;
 import com.example.dictionary.file.FileService;
 import com.example.dictionary.repositories.InMemoryRepository;
@@ -49,8 +49,8 @@ public class GenericTestConfiguration {
 	
 	@Bean
 	@Scope(value=BeanDefinition.SCOPE_PROTOTYPE)
-	public TranslationCommand translationCommand(CommandParameters params) {
-		return new TranslationCommand(params);
+	public TranslationCommand translationCommand(TranslationProcess process) {
+		return new TranslationCommand(process);
 	}
 
     @Bean

@@ -18,11 +18,11 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.example.dictionary.CommandParameters;
+import com.example.dictionary.TranslationProcess;
 import com.example.dictionary.commands.TranslationCommand;
 import com.example.dictionary.commands.TranslationCommandFeatureMockedTest.JavaConfiguration;
 import com.example.dictionary.config.GenericTestConfiguration;
 import com.example.dictionary.model.DictionaryWord;
-import com.example.dictionary.model.TranslationProcess;
 import com.github.rmannibucau.featuredmock.http.FeaturedHttpServer;
 import com.github.rmannibucau.featuredmock.http.FeaturedHttpServerBuilder;
 
@@ -47,10 +47,10 @@ public class TranslationCommandFeatureMockedTest {
 	
 	@Test
 	public void bookTranslationTest() {
-		TranslationProcess process = new TranslationProcess();
+		TranslationProcess process = TranslationProcess.fromCommandParameters(new CommandParameters("search book"));
 		TranslationCommand command = (TranslationCommand) factory.getBean(
-				"translationCommand", new CommandParameters("search book"));
-		process = command.execute(process);
+				"translationCommand", process);
+		process = command.execute();
 		
 		List<DictionaryWord> dictionaryWords = process.getWords();
 		assertEquals(24, dictionaryWords.size());

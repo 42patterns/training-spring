@@ -24,8 +24,8 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import com.example.dictionary.CommandParameters;
+import com.example.dictionary.TranslationProcess;
 import com.example.dictionary.model.DictionaryWord;
-import com.example.dictionary.model.TranslationProcess;
 import com.example.dictionary.validation.SearchValidationGroup;
 
 @Component
@@ -43,21 +43,21 @@ public class TranslationCommand extends Command {
 	private BufferedReader bufferedReader;
 
 	public TranslationCommand() {
-		super(new CommandParameters("search"));
+		super(TranslationProcess.fromCommandParameters(new CommandParameters("search")));
 	}
 
-	public TranslationCommand(CommandParameters params) {
-		super(params);
+	public TranslationCommand(TranslationProcess process) {
+		super(process);
 	}
 
 	@Override
-	public Set<ConstraintViolation<?>> getErrors() {
-		Set<ConstraintViolation<CommandParameters>> errors = validator.validate(params, SearchValidationGroup.class);
-		return new HashSet<ConstraintViolation<?>>(errors);
+	public Set<ConstraintViolation<? extends Command>> getErrors() {
+		Set<ConstraintViolation<TranslationCommand>> errors = validator.validate(this, SearchValidationGroup.class);
+		return new HashSet<ConstraintViolation<? extends Command>>(errors);
 	}
 	
-	public TranslationProcess execute(TranslationProcess process) {
-		Iterator<String> iterator = getWords(params).iterator();
+	public TranslationProcess execute() {
+		Iterator<String> iterator = getWords(process.getParams()).iterator();
 		List<DictionaryWord> words = new ArrayList<DictionaryWord>();
 		
 		while (iterator.hasNext()) {
