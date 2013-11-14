@@ -1,12 +1,12 @@
 package com.example.dictionary.logging;
 
-import static org.mockito.Mockito.*;
-
-import java.util.Properties;
-
+import com.example.dictionary.CommandParameters;
+import com.example.dictionary.TranslationProcess;
+import com.example.dictionary.commands.TranslationCommand;
+import com.example.dictionary.commands.TranslationCommandLocalFileTest.JavaConfiguration;
+import com.example.dictionary.config.GenericTestConfiguration;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -16,11 +16,9 @@ import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import com.example.dictionary.CommandParameters;
-import com.example.dictionary.TranslationProcess;
-import com.example.dictionary.commands.TranslationCommand;
-import com.example.dictionary.commands.TranslationCommandLocalFileTest.JavaConfiguration;
-import com.example.dictionary.config.GenericTestConfiguration;
+import java.util.Properties;
+
+import static org.mockito.Mockito.*;
 
 @ContextConfiguration(classes = AuditLoggingAspectTest.AspectConfiguration.class)
 @RunWith(SpringJUnit4ClassRunner.class)

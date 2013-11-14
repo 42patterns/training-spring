@@ -26,7 +26,7 @@ import org.springframework.stereotype.Component;
 import com.example.dictionary.CommandParameters;
 import com.example.dictionary.TranslationProcess;
 import com.example.dictionary.model.DictionaryWord;
-import com.example.dictionary.validation.SearchValidationGroup;
+import com.example.dictionary.validation.groups.SearchValidationGroup;
 
 @Component
 @Scope(value=BeanDefinition.SCOPE_PROTOTYPE)

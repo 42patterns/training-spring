@@ -5,8 +5,9 @@ import java.util.Arrays;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
-import com.example.dictionary.validation.NoAttributesValidationGroup;
-import com.example.dictionary.validation.SearchValidationGroup;
+import com.example.dictionary.groups.OnlyOneArgumentValidationGroup;
+import com.example.dictionary.validation.groups.NoAttributesValidationGroup;
+import com.example.dictionary.validation.groups.SearchValidationGroup;
 
 public class CommandParameters {
 
@@ -16,7 +17,8 @@ public class CommandParameters {
 
 	@Size.List({
 		@Size(min=0, max=0, groups=NoAttributesValidationGroup.class),
-		@Size(min=1, groups=SearchValidationGroup.class)
+		@Size(min=1, groups=SearchValidationGroup.class),
+		@Size(min=1, max=1, groups=OnlyOneArgumentValidationGroup.class)
 	})
 	private String[] attributes;
 

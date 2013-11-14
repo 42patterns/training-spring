@@ -1,4 +1,4 @@
-package com.example.dictionary.validation;
+package com.example.dictionary.validation.groups;
 
 public interface NoAttributesValidationGroup {
 
