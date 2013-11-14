@@ -2,10 +2,10 @@ package com.example.dictionary.logging;
 
 import java.util.Arrays;
 
-import org.apache.log4j.Logger;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.example.dictionary.commands.TranslationCommand;
@@ -14,12 +14,13 @@ import com.example.dictionary.commands.TranslationCommand;
 @Aspect
 public class AuditLoggingAspect {
 
-	private static Logger log = Logger.getLogger(AuditLoggingAspect.class);
+	@Autowired
+	LoggerWrapper log;
 	
-	@Before("execution(* com.example.dictionary.commands.TranslationCommand.execute(*))")
+	@Before("execution(* com.example.dictionary.commands.TranslationCommand.execute())")
 	public void logWebServiceCall(JoinPoint p) {
 		TranslationCommand command = (TranslationCommand) p.getThis();
-		log.info("Calling [TranslationService(search)] for " + Arrays.asList(command.getParams().getAttributes()));
+		log.info(this.getClass(), "Calling [TranslationService(search)] for " + Arrays.asList(command.getParams().getAttributes()));
 	}
 	
 }
