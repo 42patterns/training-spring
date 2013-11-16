@@ -10,11 +10,12 @@ import org.springframework.context.annotation.FilterType;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.support.AbstractApplicationContext;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
+import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 
 import javax.sql.DataSource;
-
 
 public class AppJavaConfig {
 
@@ -35,6 +36,7 @@ public class AppJavaConfig {
 				type = FilterType.ANNOTATION)
 	)
     @PropertySource("META-INF/spring/dict.properties")
+    @EnableTransactionManagement
 	@EnableAspectJAutoProxy
 	public static class AppConfiguration {
 	
@@ -52,6 +54,11 @@ public class AppJavaConfig {
 			ds.setPassword("root");
 			return ds;
 		}
+
+        @Bean
+        public DataSourceTransactionManager transactionManager(DataSource ds) {
+            return new DataSourceTransactionManager(ds);
+        }
 		
 		@Bean
 		public PropertySourcesPlaceholderConfigurer properties() {

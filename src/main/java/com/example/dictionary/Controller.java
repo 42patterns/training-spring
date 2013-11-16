@@ -1,18 +1,23 @@
 package com.example.dictionary;
 
+import com.example.dictionary.file.FileRollbackHandler;
+import com.example.dictionary.file.FileService;
+import com.example.dictionary.model.DictionaryWord;
+import com.example.dictionary.repositories.Repository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Component;
+import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.TransactionStatus;
+import org.springframework.transaction.support.TransactionCallback;
+import org.springframework.transaction.support.TransactionSynchronizationManager;
+import org.springframework.transaction.support.TransactionTemplate;
+
+import javax.validation.ConstraintViolation;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 import java.util.Set;
-
-import javax.validation.ConstraintViolation;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.stereotype.Component;
-
-import com.example.dictionary.model.DictionaryWord;
-import com.example.dictionary.repositories.Repository;
 
 @Component
 public class Controller {
@@ -23,9 +28,18 @@ public class Controller {
 	@Autowired
 	@Qualifier("datasource")
 	Repository repository;
-	
+
+    @Autowired
+    FileService fileService;
+
+    TransactionTemplate transactionTemplate;
 	List<DictionaryWord> foundWords = new ArrayList<DictionaryWord>();
-	
+
+    @Autowired
+    public Controller(PlatformTransactionManager txManager) {
+        transactionTemplate = new TransactionTemplate(txManager);
+    }
+
 	public void run() {
 		boolean ok = true;
 		Scanner s = new Scanner(System.in);
@@ -55,8 +69,20 @@ public class Controller {
 			} else if ("show-saved".equals(params.getCommandName())) {
 				repository.printSavedWords();
 			} else if ("save".equals(params.getCommandName())) {
-				Integer i = Integer.valueOf(params.getAttributes()[0]);
-				repository.addWord(foundWords.get(i));
+				final Integer i = Integer.valueOf(params.getAttributes()[0]);
+
+                transactionTemplate.execute(new TransactionCallback<Void>() {
+                    @Override
+                    public Void doInTransaction(TransactionStatus status) {
+
+                        DictionaryWord word = foundWords.get(i);
+                        String filename = fileService.createFile(word.toString());
+                        TransactionSynchronizationManager.registerSynchronization(new FileRollbackHandler(filename));
+                        repository.addWord(word);
+
+                        return null;  //To change body of implemented methods use File | Settings | File Templates.
+                    }
+                });
 			}
 		}
 		s.close();

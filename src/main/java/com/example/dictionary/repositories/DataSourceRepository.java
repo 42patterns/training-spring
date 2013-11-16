@@ -1,21 +1,20 @@
 package com.example.dictionary.repositories;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.sql.DataSource;
-
+import com.example.dictionary.model.DictionaryWord;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
-import com.example.dictionary.model.DictionaryWord;
+import javax.sql.DataSource;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Component
 @Qualifier("datasource")
@@ -23,7 +22,9 @@ public class DataSourceRepository extends Repository {
 
 	JdbcTemplate jdbcTemplate;
 	SimpleJdbcInsert insertWord;
-	
+
+    public DataSourceRepository() {}
+
 	@Autowired
 	public DataSourceRepository(DataSource ds) {
 		jdbcTemplate = new JdbcTemplate(ds);
@@ -47,6 +48,7 @@ public class DataSourceRepository extends Repository {
 		});
 	}
 
+    @Transactional
 	public void addWord(DictionaryWord word) {
         Map<String, Object> parameters = new HashMap<String, Object>(2);
         parameters.put("polish_word", word.getPolishWord());

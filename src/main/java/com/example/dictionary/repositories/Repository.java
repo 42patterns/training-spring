@@ -1,8 +1,8 @@
 package com.example.dictionary.repositories;
 
-import java.util.List;
-
 import com.example.dictionary.model.DictionaryWord;
+
+import java.util.List;
 
 public abstract class Repository {
 
