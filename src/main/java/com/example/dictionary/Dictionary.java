@@ -1,5 +1,9 @@
 package com.example.dictionary;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -12,9 +16,13 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
+@Component
 public class Dictionary {
 
+    private static Logger logger = LoggerFactory.getLogger(Dictionary.class);
+
     public List<DictionaryWord> getTranslations(String polishWord) throws IOException {
+        logger.info("Translations for '{}'", polishWord);
         List<String> words = getWords(polishWord);
 
         return IntStream.range(0, words.size())         //for all words in list
