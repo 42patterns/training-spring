@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 @EnableAutoConfiguration
@@ -41,15 +40,7 @@ public class App {
 
     @RequestMapping("/{word}")
     public List<DictionaryWord> getTranslations(@PathVariable String word) throws IOException {
-        List<DictionaryWord> translations = dict.getTranslations(word);
-
-        TranslationLog log = new TranslationLog();
-        log.setPolishWord(word);
-        log.setCnt(translations.size());
-        log.setTimestamp(new Date());
-        repository.save(log);
-
-        return translations;
+        return dict.getTranslations(word);
     }
 
 
