@@ -1,7 +1,7 @@
 package com.example.audit;
 
-import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface TransactionLogRepository extends CrudRepository<TranslationLog, Long> {
+public interface TransactionLogRepository extends JpaRepository<TranslationLog, Long> {
 
 }

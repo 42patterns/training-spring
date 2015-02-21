@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 @EnableAutoConfiguration
@@ -33,9 +32,7 @@ public class App {
 
     @RequestMapping("/log")
     public List<TranslationLog> log() {
-        List<TranslationLog> logs = new ArrayList<>();
-        repository.findAll().forEach(logs::add);
-        return logs;
+        return repository.findAll();
     }
 
     @RequestMapping("/{word}")
