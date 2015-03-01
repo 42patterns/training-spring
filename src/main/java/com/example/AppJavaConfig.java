@@ -15,8 +15,8 @@ import org.springframework.context.support.AbstractApplicationContext;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
-import org.springframework.orm.hibernate3.HibernateTransactionManager;
-import org.springframework.orm.hibernate3.annotation.AnnotationSessionFactoryBean;
+import org.springframework.orm.hibernate4.HibernateTransactionManager;
+import org.springframework.orm.hibernate4.LocalSessionFactoryBean;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
@@ -77,8 +77,8 @@ public class AppJavaConfig {
 		}
 
 		@Bean
-		public AnnotationSessionFactoryBean session() {
-			AnnotationSessionFactoryBean session = new AnnotationSessionFactoryBean();
+		public LocalSessionFactoryBean session() {
+            LocalSessionFactoryBean session = new LocalSessionFactoryBean();
 			session.setDataSource(dataSource());
 			session.setPackagesToScan(new String[] { "com.example.dictionary.model" });
 

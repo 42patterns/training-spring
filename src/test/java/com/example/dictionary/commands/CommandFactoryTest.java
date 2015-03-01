@@ -24,13 +24,13 @@ public class CommandFactoryTest {
 	@Test
 	public void voidCommand() {
 		Command command = commands.getCommand(TranslationProcess.fromCommandParameters(new CommandParameters("eit")));
-		assertThat(command, is(VoidCommand.class));
+		assertThat(command, instanceOf(VoidCommand.class));
 	}
 
 	@Test
 	public void searchCommand() {
 		Command command = commands.getCommand(TranslationProcess.fromCommandParameters(new CommandParameters("search foo")));
-		assertThat(command, is(TranslationCommand.class));
+		assertThat(command, instanceOf(TranslationCommand.class));
 	}
 
 	

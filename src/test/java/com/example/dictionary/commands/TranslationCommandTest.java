@@ -35,7 +35,7 @@ public class TranslationCommandTest {
 
 		List<DictionaryWord> dictionaryWords = process.getWords();
 		assertEquals(24, dictionaryWords.size());
-		assertEquals("książka", dictionaryWords.get(1).getPolishWord());
+		assertEquals("księga", dictionaryWords.get(1).getPolishWord());
 	}
 
 	@Configuration
