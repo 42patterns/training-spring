@@ -1,12 +1,11 @@
 package com.example.dictionary.validation;
 
-import java.util.regex.Pattern;
+import com.example.dictionary.TranslationProcess;
+import com.example.dictionary.commands.Command;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
-
-import com.example.dictionary.TranslationProcess;
-import com.example.dictionary.commands.Command;
+import java.util.regex.Pattern;
 
 public class SearchParamatersValidator implements
 		ConstraintValidator<ValidSearchParameters, Command> {
@@ -23,16 +22,19 @@ public class SearchParamatersValidator implements
 	public boolean isValid(Command command, ConstraintValidatorContext context) {
 		TranslationProcess process = command.getProcess();
 
-		if (process.getWords() == null)
-			return false;
+		if (process.getWords() == null) {
+            return false;
+        }
 
-		if (!pattern.matcher(command.getParams().getAttributes()[0]).matches())
-			return false;
+		if (!pattern.matcher(command.getParams().getAttributes()[0]).matches()) {
+            return false;
+        }
 		
 		Integer saveIndex = Integer.valueOf(command.getParams().getAttributes()[0]);
 		
-		if (saveIndex > (process.getWords().size() - 1))
-			return false;
+		if (saveIndex > (process.getWords().size() - 1)) {
+            return false;
+        }
 		
 		return true;
 	}

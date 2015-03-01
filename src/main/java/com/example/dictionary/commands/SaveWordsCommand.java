@@ -14,8 +14,6 @@ import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.PlatformTransactionManager;
-import org.springframework.transaction.TransactionStatus;
-import org.springframework.transaction.support.TransactionCallback;
 import org.springframework.transaction.support.TransactionSynchronizationManager;
 import org.springframework.transaction.support.TransactionTemplate;
 
@@ -59,17 +57,14 @@ public class SaveWordsCommand extends Command {
         final Integer i = Integer.valueOf(getParams().getAttributes()[0]);
 
         TransactionTemplate transactionTemplate = new TransactionTemplate(txManager);
-        transactionTemplate.execute(new TransactionCallback<Void>() {
-            @Override
-            public Void doInTransaction(TransactionStatus status) {
+        transactionTemplate.execute(status -> {
 
-                DictionaryWord word = process.getWords().get(i);
-                String filename = fileService.createFile(word.toString());
-                TransactionSynchronizationManager.registerSynchronization(new FileRollbackHandler(filename));
-                repository.addWord(word);
+            DictionaryWord word = process.getWords().get(i);
+            String filename = fileService.createFile(word.toString());
+            TransactionSynchronizationManager.registerSynchronization(new FileRollbackHandler(filename));
+            repository.addWord(word);
 
-                return null;  //To change body of implemented methods use File | Settings | File Templates.
-            }
+            return null;  //To change body of implemented methods use File | Settings | File Templates.
         });
 		return process;
 	}
@@ -77,7 +72,7 @@ public class SaveWordsCommand extends Command {
 	@Override
 	public Set<ConstraintViolation<? extends Command>> getErrors() {
 		Set<ConstraintViolation<SaveWordsCommand>> errors = validator.validate(this, Default.class, OnlyOneArgumentValidationGroup.class);
-		return new HashSet<ConstraintViolation<? extends Command>>(errors);
+		return new HashSet<>(errors);
 	}
 	
 }

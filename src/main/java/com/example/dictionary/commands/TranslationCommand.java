@@ -1,9 +1,21 @@
 package com.example.dictionary.commands;
 
+import com.example.dictionary.CommandParameters;
+import com.example.dictionary.TranslationProcess;
+import com.example.dictionary.model.DictionaryWord;
+import com.example.dictionary.validation.groups.SearchValidationGroup;
+import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.beans.factory.config.BeanDefinition;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
+
+import javax.validation.ConstraintViolation;
+import javax.validation.Validator;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -12,21 +24,6 @@ import java.util.List;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import javax.validation.ConstraintViolation;
-import javax.validation.Validator;
-
-import org.apache.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.beans.factory.config.BeanDefinition;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
-
-import com.example.dictionary.CommandParameters;
-import com.example.dictionary.TranslationProcess;
-import com.example.dictionary.model.DictionaryWord;
-import com.example.dictionary.validation.groups.SearchValidationGroup;
 
 @Component
 @Scope(value=BeanDefinition.SCOPE_PROTOTYPE)
@@ -53,12 +50,12 @@ public class TranslationCommand extends Command {
 	@Override
 	public Set<ConstraintViolation<? extends Command>> getErrors() {
 		Set<ConstraintViolation<TranslationCommand>> errors = validator.validate(this, SearchValidationGroup.class);
-		return new HashSet<ConstraintViolation<? extends Command>>(errors);
+		return new HashSet<>(errors);
 	}
 	
 	public TranslationProcess execute() {
 		Iterator<String> iterator = getWords(process.getParams()).iterator();
-		List<DictionaryWord> words = new ArrayList<DictionaryWord>();
+		List<DictionaryWord> words = new ArrayList<>();
 		
 		while (iterator.hasNext()) {
 			DictionaryWord word = DictionaryWord.fromPolishWord(iterator.next())
@@ -73,7 +70,7 @@ public class TranslationCommand extends Command {
 	}
 	
 	private List<String> getWords(CommandParameters params) {
-		List<String> words = new ArrayList<String>();
+		List<String> words = new ArrayList<>();
 		prepareBufferedReader(params.getAttributes());
 		
 		String word = moveToNextWord();
@@ -94,8 +91,6 @@ public class TranslationCommand extends Command {
 			
 			bufferedReader = new BufferedReader(new InputStreamReader(new URL(
 					urlString).openStream()));
-		} catch (MalformedURLException ex) {
-			throw new RuntimeException(ex);
 		} catch (IOException ex) {
 			throw new RuntimeException(ex);
 		}

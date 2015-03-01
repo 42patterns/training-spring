@@ -4,14 +4,11 @@ import com.example.dictionary.model.DictionaryWord;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.sql.DataSource;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -35,22 +32,17 @@ public class DataSourceRepository extends Repository {
 	}
 	
 	public List<DictionaryWord> getSavedWords() {
-		return jdbcTemplate.query("select * from words", 
-				new RowMapper<DictionaryWord>() {
-
-					public DictionaryWord mapRow(ResultSet rs, int rowNum)
-							throws SQLException {
-						return DictionaryWord.fromPolishWord(rs.getString("polish_word"))
-								.withEnglishWord(rs.getString("english_word"))
-								.build();
-					}
-			
-		});
+		return jdbcTemplate.query("select * from words",
+                (rs, rowNum) -> {
+                    return DictionaryWord.fromPolishWord(rs.getString("polish_word"))
+                            .withEnglishWord(rs.getString("english_word"))
+                            .build();
+                });
 	}
 
     @Transactional
 	public void addWord(DictionaryWord word) {
-        Map<String, Object> parameters = new HashMap<String, Object>(2);
+        Map<String, Object> parameters = new HashMap<>(2);
         parameters.put("polish_word", word.getPolishWord());
         parameters.put("english_word", word.getEnglishWord());
         insertWord.execute(parameters);		

@@ -12,10 +12,9 @@ public abstract class Repository {
 
 	public void printSavedWords() {
 		List<DictionaryWord> savedWords = getSavedWords();
-		for (int i = 0; i<savedWords.size(); i++) {
-			DictionaryWord word = savedWords.get(i);
-			System.out.println(i + ") " + word.getPolishWord() + " :: " + word.getEnglishWord());
-		}
+        savedWords.forEach((word) -> {
+            int i = savedWords.indexOf(word);
+            System.out.println(i + ") " + word.getPolishWord() + " :: " + word.getEnglishWord());
+        });
 	}
-
 }
