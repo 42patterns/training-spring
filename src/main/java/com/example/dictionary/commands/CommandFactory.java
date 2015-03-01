@@ -10,24 +10,25 @@ import com.example.dictionary.TranslationProcess;
 @Component
 public class CommandFactory {
 
-	@Autowired
-	BeanFactory factory;
-	
-	public Command getCommand(TranslationProcess process) {
-		CommandParameters params = process.getParams();
-		if ("exit".equals(params.getCommandName())) {
-			return (ExitCommand) factory.getBean("exitCommand", process);
-		} else if ("search".equals(params.getCommandName())) {
-			return (TranslationCommand) factory.getBean("translationCommand", process); 
-		} else if ("show-all".equals(params.getCommandName())) {
-			return (ShowAllWordsCommand) factory.getBean("showAllWordsCommand", process);
-		} else if ("show-saved".equals(params.getCommandName())) {
-			return (ShowSavedWordsCommand) factory.getBean("showSavedWordsCommand", process);
-		} else if ("save".equals(params.getCommandName())) {
-			return (SaveWordsCommand) factory.getBean("saveWordsCommand", process);
-		}
-		
-		return (VoidCommand) factory.getBean("voidCommand", process);
-	}
+    @Autowired
+    BeanFactory factory;
+
+    public Command getCommand(TranslationProcess process) {
+        CommandParameters params = process.getParams();
+        switch (params.getCommandName()) {
+            case "exit":
+                return factory.getBean(ExitCommand.class, process);
+            case "search":
+                return factory.getBean(TranslationCommand.class, process);
+            case "show-all":
+                return factory.getBean(ShowAllWordsCommand.class, process);
+            case "show-saved":
+                return factory.getBean(ShowSavedWordsCommand.class, process);
+            case "save":
+                return factory.getBean(SaveWordsCommand.class, process);
+            default:
+                return factory.getBean(VoidCommand.class, process);
+        }
+    }
 
 }
