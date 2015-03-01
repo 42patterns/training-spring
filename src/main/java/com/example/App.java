@@ -1,7 +1,6 @@
 package com.example;
 
 import com.example.audit.TransactionLogRepository;
-import com.example.audit.TranslationLog;
 import com.example.dictionary.Dictionary;
 import com.example.dictionary.DictionaryWord;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,12 +29,7 @@ public class App {
     }
 
 
-    @RequestMapping("/log")
-    public List<TranslationLog> log() {
-        return repository.findAll();
-    }
-
-    @RequestMapping("/{word}")
+    @RequestMapping("/translate/{word}")
     public List<DictionaryWord> getTranslations(@PathVariable String word) throws IOException {
         return dict.getTranslations(word);
     }
