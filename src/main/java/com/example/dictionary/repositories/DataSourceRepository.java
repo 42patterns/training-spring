@@ -20,8 +20,6 @@ public class DataSourceRepository extends Repository {
 	JdbcTemplate jdbcTemplate;
 	SimpleJdbcInsert insertWord;
 
-    public DataSourceRepository() {}
-
 	@Autowired
 	public DataSourceRepository(DataSource ds) {
 		jdbcTemplate = new JdbcTemplate(ds);
