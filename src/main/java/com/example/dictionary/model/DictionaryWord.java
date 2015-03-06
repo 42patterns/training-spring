@@ -64,7 +64,28 @@ public class DictionaryWord {
 				+ englishWord + "]";
 	}
 
-	public static Builder fromPolishWord(String word) {
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof DictionaryWord)) return false;
+
+        DictionaryWord that = (DictionaryWord) o;
+
+        if (englishWord != null ? !englishWord.equals(that.englishWord) : that.englishWord != null) return false;
+        if (polishWord != null ? !polishWord.equals(that.polishWord) : that.polishWord != null) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = (int) (id ^ (id >>> 32));
+        result = 31 * result + (polishWord != null ? polishWord.hashCode() : 0);
+        result = 31 * result + (englishWord != null ? englishWord.hashCode() : 0);
+        return result;
+    }
+
+    public static Builder fromPolishWord(String word) {
 		return new Builder(word);
 	}
 

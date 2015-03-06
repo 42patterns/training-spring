@@ -63,7 +63,6 @@ public class SaveWordsCommand extends Command {
             String filename = fileService.createFile(word.toString());
             TransactionSynchronizationManager.registerSynchronization(new FileRollbackHandler(filename));
             repository.addWord(word);
-
             return null;  //To change body of implemented methods use File | Settings | File Templates.
         });
 		return process;
