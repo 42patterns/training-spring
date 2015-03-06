@@ -4,4 +4,4 @@
 .springBeans
 target/
 .idea/
-spring-utility.iml
+*.iml
