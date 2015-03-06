@@ -1,7 +1,7 @@
 package com.example.dictionary.repositories;
 
 import com.example.dictionary.model.DictionaryWord;
-import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -10,7 +10,7 @@ import javax.persistence.PersistenceContext;
 import java.util.List;
 
 @Component
-@Qualifier("jpa")
+@Profile("jpa")
 public class JpaRepository extends Repository {
 
 	@PersistenceContext
@@ -21,7 +21,7 @@ public class JpaRepository extends Repository {
 				.getResultList();
 	}
 
-	@Transactional("jpaTxMgr")
+	@Transactional
 	public void addWord(DictionaryWord word) {
 		em.persist(word);
 	}

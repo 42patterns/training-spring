@@ -9,7 +9,6 @@ import com.example.dictionary.model.DictionaryWord;
 import com.example.dictionary.repositories.Repository;
 import com.example.dictionary.validation.ValidSearchParameters;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -30,14 +29,12 @@ public class SaveWordsCommand extends Command {
 
 
 	@Autowired
-	@Qualifier("jpa")
     Repository repository;
 
     @Autowired
     FileService fileService;
 
     @Autowired
-    @Qualifier("jpaTxMgr")
     PlatformTransactionManager txManager;
 
     @Autowired

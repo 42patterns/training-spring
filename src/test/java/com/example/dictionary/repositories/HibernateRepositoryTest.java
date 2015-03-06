@@ -6,7 +6,6 @@ import org.hibernate.dialect.HSQLDialect;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -62,16 +61,13 @@ public class HibernateRepositoryTest {
     public static class Config {
 
         @Bean
-        @Qualifier("hibernateTxMgr")
         public HibernateTransactionManager hibernateTxManager(SessionFactory factory) {
             HibernateTransactionManager tx = new HibernateTransactionManager();
             tx.setSessionFactory(factory);
             return tx;
         }
 
-
         @Bean
-        @Autowired
         public LocalSessionFactoryBean session(DataSource ds) {
             LocalSessionFactoryBean session = new LocalSessionFactoryBean();
             session.setDataSource(ds);

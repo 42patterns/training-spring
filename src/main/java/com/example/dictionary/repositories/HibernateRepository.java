@@ -3,14 +3,14 @@ package com.example.dictionary.repositories;
 import com.example.dictionary.model.DictionaryWord;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 @Component
-@Qualifier("hibernate")
+@Profile("hibernate")
 public class HibernateRepository extends Repository {
 
 	@Autowired
@@ -21,9 +21,9 @@ public class HibernateRepository extends Repository {
 				.list();
 	}
 
-	@Transactional("hibernateTxMgr")
+	@Transactional
 	public void addWord(DictionaryWord word) {
-		mySessionFactory.openSession().persist(word);
+		mySessionFactory.getCurrentSession().persist(word);
 		mySessionFactory.getCurrentSession().flush();
 	}
 

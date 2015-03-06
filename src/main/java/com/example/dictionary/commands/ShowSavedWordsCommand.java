@@ -1,25 +1,21 @@
 package com.example.dictionary.commands;
 
-import java.util.Collections;
-import java.util.Set;
-
-import javax.validation.ConstraintViolation;
-
+import com.example.dictionary.TranslationProcess;
+import com.example.dictionary.repositories.Repository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import com.example.dictionary.TranslationProcess;
-import com.example.dictionary.repositories.Repository;
+import javax.validation.ConstraintViolation;
+import java.util.Collections;
+import java.util.Set;
 
 @Component
 @Scope(value = BeanDefinition.SCOPE_PROTOTYPE)
 public class ShowSavedWordsCommand extends Command {
 
 	@Autowired
-	@Qualifier("jpa")
 	Repository repository;
 
 	public ShowSavedWordsCommand(TranslationProcess process) {

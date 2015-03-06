@@ -2,7 +2,7 @@ package com.example.dictionary.repositories;
 
 import com.example.dictionary.model.DictionaryWord;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.annotation.Profile;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Component;
@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.Map;
 
 @Component
-@Qualifier("datasource")
+@Profile("jdbc")
 public class DataSourceRepository extends Repository {
 
 	JdbcTemplate jdbcTemplate;

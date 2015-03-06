@@ -1,14 +1,14 @@
 package com.example.dictionary.repositories;
 
 import com.example.dictionary.model.DictionaryWord;
-import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Component
-@Qualifier("inmemory")
+@Profile("inmemory")
 public class InMemoryRepository extends Repository {
 
 	List<DictionaryWord> savedWords = new ArrayList<>();
