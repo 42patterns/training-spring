@@ -47,7 +47,7 @@ public class AppJavaConfig {
 				value = Configuration.class, 
 				type = FilterType.ANNOTATION)
 	)
-    @PropertySource("META-INF/spring/dict.properties")
+    @PropertySource("classpath:META-INF/spring/dict.properties")
 	@EnableAspectJAutoProxy
 	@EnableTransactionManagement
     @Import({JdbcConfiguration.class,
