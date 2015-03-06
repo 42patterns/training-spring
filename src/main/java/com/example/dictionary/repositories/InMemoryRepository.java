@@ -8,7 +8,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Component
-@Profile("inmemory")
 public class InMemoryRepository extends Repository {
 
 	List<DictionaryWord> savedWords = new ArrayList<>();

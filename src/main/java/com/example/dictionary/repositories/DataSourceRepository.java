@@ -2,6 +2,7 @@ package com.example.dictionary.repositories;
 
 import com.example.dictionary.model.DictionaryWord;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Primary;
 import org.springframework.context.annotation.Profile;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
@@ -14,6 +15,7 @@ import java.util.List;
 import java.util.Map;
 
 @Component
+@Primary
 @Profile("jdbc")
 public class DataSourceRepository extends Repository {
 
