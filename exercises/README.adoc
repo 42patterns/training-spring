@@ -1,0 +1,283 @@
+= Spring Framework - ćwiczenia
+
+Ten projekt zawiera przykłady (ćwiczenia oraz rozwiązania ćwiczeń) do szkolenia "Tworzenia aplikacji internetowych z wykorzystaniem Spring Framework"
+
+== Ćwiczenia
+
+Celem zadań będzie napisanie aplikacji która pobiera tłumaczenia słów wpisanych z konsoli oraz wyświetla je na ekranie. Wraz z rozwojem aplikacji (i poznawaniem Spring Framework) będziemy w kolejnych ćwiczeniach dodawać kolejne funkcjonalności. 
+
+Bazowa wersja programu jest gotowa do pobrania: https://github.com/kubamarchwicki/training-spring; aplikacja zawiera podstawową konfigurację aplikacji w Springu oraz prosty kontroler umożliwiający podawanie komand z linii poleceń. 
+
+== Zadanie 1 – serwis tłumaczący
+
+Dodaj serwis pobierający tłumaczenia angielskiego słowa z serwisu http://www.dict.pl dostępny pod komendą: _search [słowo]_
+
+Algorytm pobierania wszystkich słów może wyglądać następująco:
+
+[source, java]
+----
+List<String> words = new ArrayList<String>();
+
+String urlString = "http://www.dict.pl/dict?word=" + wordToFind
+		+ "&words=&lang=PL";
+
+BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(new URL(
+		urlString).openStream()));
+
+String line = bufferedReader.readLine();
+Pattern pat = Pattern
+		.compile(".*<a href=\"dict\\?words?=(.*)&lang.*");
+
+while (line != null) {
+	Matcher matcher = pat.matcher(line);
+	if (matcher.find()) {
+		String word = matcher.group(matcher.groupCount());
+		words.add(word);
+	} 
+	line = bufferedReader.readLine();
+	
+}
+
+if (bufferedReader != null) {
+	bufferedReader.close();
+}
+----
+
+Otrzymana lista zawiera naprzemiennie słowo polskie (po tłumaczeniu) oraz oryginalne słowo angielskie (zadane przez użytkownika lub wyraz bliskoznaczny). 
+
+Utworzony serwis powinien zwracać listę par: słowo polskie, słowo angielskie.
+
+== Zadanie 2 – testy jednostkowe
+
+Napisany przez nas w ćwiczeniu 1 serwis należałoby przetestować, najlepiej w sposób automatyczny. Bazując na istniejącym `ExampleConfigurationTests` napisz nowy test dla serwisu. 
+
+Wiedząc o tym co mówi konwencja Spring Framework nt. plików konfiguracyjnych dla testów, utwórz nową konfigurację XML dla testu albo wykorzystaj wewnętrzną klasę JavaConfig.
+
+=== Zadanie 2a
+
+Test korzystający bezpośrednio z klasy `TranslationService` nie jest najlepszy – odwołuje się do zasobów w Internecie, przez co (w przypadku braku dostępu do Internetu nie zadziała – nie będzie działał stabilnie). Co więcej, ze względu na wykonywanie połączenia ze zdalnym serwerem, test działa nieporównywalnie dłużej niż jakby wywoływał się w całości lokalnie (albo w całości w pamięci). 
+
+Aby uniknąć takiego typu zachowania, należałoby zastąpić bezpośrednie odwołanie do Internetu, np. uniezależniając serwis `TranslationService` od konkretnego adresu URL (i przekazując go jako parametr, zmienną klasy – poprzez adnotację `@Value`).
+
+W Spring  Framework najłatwiej uzyskać to poprzez dodanie zewnętrznego pliku properties, zdefiniowanie adresu URL, a następnie odwołanie się do niego w konfiguracjach XML albo JavaConfig
+
+[source, xml]
+----
+<context:property-placeholder location="classpath:META-INF/spring/dict.properties"/>
+----
+
+[source, java]
+----
+@Configuration
+@ComponentScan(value = { "com.example.dictionary", "com.example.helloworld" })
+PropertySource("META-INF/spring/dict.properties")
+public static class AppConfiguration {
+
+	@Bean
+	public PropertySourcesPlaceholderConfigurer properties() {
+		return new PropertySourcesPlaceholderConfigurer();
+	}
+
+}
+----
+
+Do lokalnego pliku można dostać się bezpośrednio poprzez ClassPath `this.getClass().getResource("/words/book.html").toExternalForm();`
+
+== Zadanie 3 – walidacja parametrów
+
+Do serwisu `TranslationService` dodaj metodą sprawdzającą poprawność przekazanych parametrów. Dla serwisu wyszukującego poprawne komenda to: _search [słowo do znalezienia]_
+
+Do walidacji wykorzystaj standard Bean Validation (walidacja przez adnotacje). W tym celu dodaj do projektu następujące zależności. 
+
+[source, xml]
+----
+<dependency>
+	<groupId>javax.validation</groupId>
+	<artifactId>validation-api</artifactId>
+	<version>1.0.0.GA</version>
+</dependency>
+<dependency>
+	<groupId>org.hibernate</groupId>
+	<artifactId>hibernate-validator</artifactId>
+	<version>4.3.1.Final</version>
+</dependency
+----
+
+TIP: walidacja bazuje na obiektach (innych niż String) więc na początek zmień parametry (komendy) na obiekt. Dodatkowo, przeprowadź refaktoryzację klasy `Command` i `TranslationService` aby logikę przetwarzania parametrów wejściowych zawierać w jednym miejscu. 
+
+Na przykład, wprowadź klasę `CommandParameters` o następującej strukturze, używaj jej do przekazywania parametrów CLI oraz na jej bazie przeprowadź walidację.
+
+[source, java]
+----
+public class CommandParameters {
+	private String commandName;
+	private String[] attributes;
+}
+----
+
+== Zadanie 4 – audit logs
+
+Odwołanie się do aplikacji zewnętrznej (w naszym przypadku do serwisu http://dict.pl) jest niezmierni ważne z biznesowego punktu widzenia. Wyobraźmy sobie sytuację że to nie jest zwykły słownik  a zaawansowany Web Service, za którego wywołania pobierana jest opłata. Co miesiąc przychodzi faktura od dostawcy za wszystkie wywołania serwisu.
+
+Aby zweryfikować taką fakturę, należy upewnić się ile razy serwis był wywoływany. 
+
+Jako że nie jest to wymaganie typowe dla naszego serwisu (można powiedzieć że jest to typowe wymaganie nie funkcjonalne) zaimplementuj je w sposób nie zmieniający głównego algorytmu działania serwisu `TranslationService`
+
+Do implementacji logowania użyj komponentów Spring AOP
+
+[source, xml]
+----
+<dependency>
+	<groupId>org.springframework</groupId>
+	<artifactId>spring-aspects</artifactId>
+	<version>${spring.framework.version}</version>
+</dependency>
+----
+
+Zaloguj wywołanie publicznej metody serwisu, zaloguj informację o wywołaniu wraz z przekazywanym parametrem. 
+
+== Zadanie 5 – zapisywanie wyników
+
+Dotychczas zupełnie pomijaliśmy kwestie zwracanych wyników – wyświetlaliśmy je na ekranie. Pora to zmienić. 
+
+Zacznijmy od wyświetlenia wszystkich słów na ekranie, w formie listy, a następnie wprowadźmy komendę zapisującą konkretne tłumaczenia: _save [numer wyników z listy]_
+
+Zapisane tłumaczenie póki co przechowujmy w dowolnym miejscu w systemie (np. jako listy w kontrolerze).
+
+TIP: aby poprawnie obsługiwać listy należy przechować wyniki wyszukiwania oraz osobno listę zapisanych słów. Co powoduje konieczność implementacji kolejnych komend poza _save_: _show-saved_ oraz _show-found_
+
+=== Zadanie 5a - repozytorium
+
+„Pamięć” zaimplementowana w poprzednim ćwiczeniu jest rozwiązaniem stosunkowo naiwnym. Wszystkie dane przechowujemy w kontrolerze co czyni go grubym (antywzorzec _Fat Controller_). Aby to naprawić utwórzmy dodatkowy komponent obsługujący przechowywanie danych. 
+
+[source, java]
+----
+public interface Repository {
+
+	public List<DictionaryWord> getSavedWords();
+	
+	public void addWord(DictionaryWord word);
+
+	public void printSavedWords();
+}
+----
+
+
+== Zadanie 6 – zapis słów do bazy danych
+
+Nasze repozytorium przechowuje dane w pamięci. Nic nie stoi na przeszkodzie abyśmy zaczęli zapisywać je do bazy danych. W tym celu utwórzmy tabelę _words_
+
+[source, sql]
+----
+create database translations;
+
+create table words (
+	id int not null auto_increment primary key,
+	polish_word varchar(100),
+	english_word varchar(100)
+) DEFAULT CHARSET=utf8 COLLATE=utf8_polish_ci;
+----
+
+Do zapisywania danych użyjmy klasy `JdbcTemplate`
+
+TIP: Konfiguracja bazy danych wymaga dodania sterownika MySQL lub PostreSQL.
+
+[source, xml]
+----
+<dependency>
+	<groupId>mysql</groupId>
+	<artifactId>mysql-connector-java</artifactId>
+	<version>5.1.26</version>
+</dependency>
+----
+
+[source, xml]
+----
+<dependency>
+	<groupId>postgresql</groupId>
+	<artifactId>postgresql</artifactId>
+	<version>9.1-901.jdbc3</version>
+</dependency>
+----
+
+Dodatkowo należy dodać bibliotekę Spring odpowiedzialną za połączenie za bazą danych. 
+
+[source, xml]
+----
+<dependency>
+	<groupId>org.springframework</groupId>
+	<artifactId>spring-jdbc</artifactId>
+	<version>${spring.framework.version}</version>
+</dependency>
+----
+
+Przydatne informację dot. połączenia
+
+[source, txt]
+----
+driver = com.mysql.jdbc.Driver
+url = jdbc:mysql://localhost:3306/translations?useUnicode=true&amp;characterEncoding=utf-8
+----
+
+=== Zadanie 6a – wykorzystanie mappera obiektowego
+
+Pobierając dane z bazy danych możemy skorzystać z kolejnych dobrodziejstw Spring Framework, klasy `RowMapper`, umożliwiającej automatyczne mapowanie kolejnych elementów `ResultSet` na obiekt (w naszym przypadku `DictionaryWord`).
+
+== Zadanie 7 – transakcje
+
+Nowym wymaganiem w naszym systemie, jest zapisywanie tłumaczeń także do pliku. Przed zapisem do bazy danych należy parę słów zapisać także do pliku o losowej nazwie. Dopiero w kolejnym kroku można zapisać dane w bazie. Jeżeli transakcja w bazie danych się nie powiedzie, należy usunąć uprzedni utworzony plik.
+
+Plik może znajdować się w katalogu tymczasowym a jego nazwa może być dowolnie generowana, np.:
+
+[source, java]
+----
+public String createFile(String data) {
+    UUID id = UUID.randomUUID();
+    String filename = "/tmp/wordfile-" + id.toString();
+
+    try (PrintWriter out = new PrintWriter(filename)) {
+        out.println(data);
+    } catch (Exception e) {
+        throw new RuntimeException(e);
+    }
+
+    log.info("Saved file: "  + filename);
+    return filename;
+}
+----
+
+Wykorzystując klasy Spring `TransactionSynchronisationManager` oraz interfejs `TransactionSynchronisation` zaimplementuj poprawną obsługę transakcji i błędów.
+
+== Zadanie 8 – wykorzystanie JPA 
+
+Bardzo często spotykanym sposobem połączenia z bazą danych jest wykorzystanie standardu JPA. W przypadku naszej prostej aplikacji jest to niezwykle proste, wszakże posługujemy się już obiektem domenowym `DictionaryWord` który moglibyśmy zapisać bezpośrednio w bazie danych. 
+
+Zmodyfikuj klasę `DictionaryWord` oraz dodaj nowe repozytorium `JpaRepository` – w ten sposób korzystając z JPA do zapisu danych do bazy
+
+Przydatne biblioteki do dołączenia do projektu:
+
+[source, xml]
+----
+<dependency>
+	<groupId>org.hibernate</groupId>
+	<artifactId>hibernate-entitymanager</artifactId>
+	<version>4.3.8-Final</version>
+</dependency>
+<dependency>
+	<groupId>org.springframework</groupId>
+	<artifactId>spring-orm</artifactId>
+	<version>${spring.framework.version}</version>
+</dependency>
+
+<dependency>
+	<groupId>org.slf4j</groupId>
+	<artifactId>slf4j-api</artifactId>
+	<version>1.6.4</version>
+</dependency>
+<dependency>
+	<groupId>org.slf4j</groupId>
+	<artifactId>slf4j-log4j12</artifactId>
+	<version>1.6.4</version>
+</dependency>
+----
+
