@@ -23,6 +23,7 @@ import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 
+import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
 import java.util.Properties;
 
@@ -105,9 +106,9 @@ public class AppJavaConfig {
         }
 
         @Bean
-        public JpaTransactionManager jpaTxManager(DataSource ds) {
+        public JpaTransactionManager jpaTxManager(EntityManagerFactory emf) {
             JpaTransactionManager tx = new JpaTransactionManager();
-            tx.setEntityManagerFactory(entityManagerFactory(ds).getObject());
+            tx.setEntityManagerFactory(emf);
             return tx;
         }
 
