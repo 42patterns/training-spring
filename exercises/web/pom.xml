@@ -10,8 +10,7 @@
 	</parent>
 
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>com.example</groupId>
-	<artifactId>training-spring-web</artifactId>	
+	<artifactId>training-spring-web</artifactId>
 	<packaging>war</packaging>
 
 	<properties>
