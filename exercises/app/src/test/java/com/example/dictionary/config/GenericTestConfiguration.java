@@ -5,6 +5,7 @@ import com.example.dictionary.commands.TranslationCommand;
 import com.example.dictionary.file.FileService;
 import com.example.dictionary.repositories.InMemoryRepository;
 import com.example.dictionary.repositories.Repository;
+import com.example.dictionary.translation.TranslationService;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.Bean;
@@ -57,5 +58,8 @@ public class GenericTestConfiguration {
     public FileService fileService() {
         return new FileService();
     }
+
+    @Bean
+    public TranslationService translationService() {return new TranslationService(); }
 
 }

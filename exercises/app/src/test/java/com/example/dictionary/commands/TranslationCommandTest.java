@@ -4,6 +4,7 @@ import com.example.dictionary.CommandParameters;
 import com.example.dictionary.TranslationProcess;
 import com.example.dictionary.config.GenericTestConfiguration;
 import com.example.dictionary.model.DictionaryWord;
+import com.example.dictionary.translation.TranslationService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.BeanFactory;
@@ -19,7 +20,7 @@ import java.util.List;
 
 import static org.junit.Assert.*;
 
-@ContextConfiguration(classes = TranslationCommandTest.JavaConfiguration.class)
+@ContextConfiguration(classes = {TranslationCommandTest.JavaConfiguration.class, TranslationService.class})
 @RunWith(SpringJUnit4ClassRunner.class)
 public class TranslationCommandTest {
 
