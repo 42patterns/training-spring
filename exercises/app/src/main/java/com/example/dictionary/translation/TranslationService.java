@@ -5,15 +5,14 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Iterator;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 @Component
 public class TranslationService {
@@ -22,84 +21,39 @@ public class TranslationService {
     @Value("${urlStringTemplate}")
     private String urlStringTemplate;
 
-    private BufferedReader bufferedReader;
-
     public List<DictionaryWord> getTranslationsForWord(String wordToTranslate) {
-        Iterator<String> iterator = getWords(wordToTranslate).iterator();
-        List<DictionaryWord> words = new ArrayList<>();
+        List<String> words = getWords(wordToTranslate);
 
-        while (iterator.hasNext()) {
-            DictionaryWord word = DictionaryWord.fromPolishWord(iterator.next())
-                    .withEnglishWord(iterator.next())
-                    .build();
-
-            words.add(word);
-        }
-
-        return words;
+        return IntStream.range(0, words.size())                             //for all words in list
+                .filter(i -> i % 2 == 0)                                    //take every second
+                .mapToObj(i -> DictionaryWord.fromPolishWord(words.get(i))
+                        .withEnglishWord(words.get(i + 1))
+                        .build())                                           //map to domain object
+                .collect(Collectors.toList());                              //end return
     }
 
     private List<String> getWords(String wordToFind) {
-        List<String> words = new ArrayList<>();
-        prepareBufferedReader(wordToFind);
+        String urlString = urlStringTemplate.replace("{}", wordToFind);
+        log.info("URL: " + urlString);
 
-        String word = moveToNextWord();
-        while (hasNext(word)) {
-            words.add(word);
-            word = moveToNextWord();
-        }
-        dispose();
-
-        return words;
-    }
-
-
-    private void prepareBufferedReader(String wordToFind) {
         try {
-            String urlString = urlStringTemplate.replace("{}", wordToFind);
-            log.info("URL: " + urlString);
-
-            bufferedReader = new BufferedReader(new InputStreamReader(new URL(
-                    urlString).openStream()));
-        } catch (IOException ex) {
-            throw new RuntimeException(ex);
-        }
-    }
-
-    private String moveToNextWord() {
-        try {
-
-            String line = bufferedReader.readLine();
             Pattern pat = Pattern
                     .compile(".*<a href=\"dict\\?words?=(.*)&lang.*");
 
-            while (hasNext(line)) {
-                Matcher matcher = pat.matcher(line);
-                if (matcher.find()) {
-                    return matcher.group(matcher.groupCount());
-                } else {
-                    line = bufferedReader.readLine();
-                }
-            }
+            URL url = new URL(urlString);
+            String s = new Scanner(url.openStream()).useDelimiter("\\A").next();
+            return Arrays.asList(s.split("\n")).stream()
+                .filter(l -> pat.asPredicate().test(l))
+                    .map(l -> {
+                        Matcher m = pat.matcher(l);
+                        m.find();
+                        return m.group(m.groupCount());
+                    })
+                    .collect(Collectors.toList());
 
-        } catch (IOException e) {
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
-
-        return null;
     }
 
-    private void dispose() {
-        try {
-            if (bufferedReader != null) {
-                bufferedReader.close();
-            }
-        } catch (IOException ex) {
-            throw new RuntimeException(ex);
-        }
-    }
-
-    private boolean hasNext(String item) {
-        return (item != null);
-    }
 }
