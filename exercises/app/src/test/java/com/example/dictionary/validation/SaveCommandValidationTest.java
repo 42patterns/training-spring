@@ -1,5 +1,6 @@
 package com.example.dictionary.validation;
 
+import com.example.AppJavaConfig;
 import com.example.dictionary.CommandParameters;
 import com.example.dictionary.TranslationProcess;
 import com.example.dictionary.commands.Command;
@@ -14,6 +15,7 @@ import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Scope;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
@@ -25,7 +27,8 @@ import java.util.Set;
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.*;
 
-@ContextConfiguration(classes = SaveCommandValidationTest.Config.class)
+@ActiveProfiles("test")
+@ContextConfiguration(classes = {AppJavaConfig.AppConfiguration.class, GenericTestConfiguration.class})
 @RunWith(SpringJUnit4ClassRunner.class)
 public class SaveCommandValidationTest {
 
@@ -69,17 +72,6 @@ public class SaveCommandValidationTest {
 
 		Set<ConstraintViolation<? extends Command>> errors = service.getErrors();
 		assertThat(errors.isEmpty(), is(true));
-	}
-
-	@Configuration
-	public static class Config extends GenericTestConfiguration {
-
-		@Bean 
-		@Scope(value=BeanDefinition.SCOPE_PROTOTYPE)
-		public SaveWordsCommand saveWordsCommand(TranslationProcess process) {
-			return new SaveWordsCommand(process);
-		}
-		
 	}
 	
 }

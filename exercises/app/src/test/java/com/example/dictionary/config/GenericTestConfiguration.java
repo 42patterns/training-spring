@@ -6,9 +6,11 @@ import com.example.dictionary.file.FileService;
 import com.example.dictionary.repositories.InMemoryRepository;
 import com.example.dictionary.repositories.Repository;
 import com.example.dictionary.translation.TranslationService;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Profile;
 import org.springframework.context.annotation.Scope;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.TransactionDefinition;
@@ -16,50 +18,16 @@ import org.springframework.transaction.TransactionException;
 import org.springframework.transaction.TransactionStatus;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 
+@Profile("test")
 public class GenericTestConfiguration {
 
 	@Bean
-	@Qualifier("jpa")
 	public Repository repository() {
 		return new InMemoryRepository();
 	}
 
     @Bean
-    @Qualifier("jpaTxMgr")
     public PlatformTransactionManager txManager() {
-        return new PlatformTransactionManager() {
-            @Override
-            public TransactionStatus getTransaction(TransactionDefinition definition) throws TransactionException {
-                return null;  //To change body of implemented methods use File | Settings | File Templates.
-            }
-
-            @Override
-            public void commit(TransactionStatus status) throws TransactionException {
-            }
-
-            @Override
-            public void rollback(TransactionStatus status) throws TransactionException {
-            }
-        };
+        return Mockito.mock(PlatformTransactionManager.class);
     }
-	
-	@Bean
-	public LocalValidatorFactoryBean validator() {
-		return new LocalValidatorFactoryBean();
-	}
-	
-	@Bean
-	@Scope(value=BeanDefinition.SCOPE_PROTOTYPE)
-	public TranslationCommand translationCommand(TranslationProcess process) {
-		return new TranslationCommand(process);
-	}
-
-    @Bean
-    public FileService fileService() {
-        return new FileService();
-    }
-
-    @Bean
-    public TranslationService translationService() {return new TranslationService(); }
-
 }

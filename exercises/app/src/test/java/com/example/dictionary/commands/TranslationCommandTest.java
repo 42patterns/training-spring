@@ -1,5 +1,6 @@
 package com.example.dictionary.commands;
 
+import com.example.AppJavaConfig;
 import com.example.dictionary.CommandParameters;
 import com.example.dictionary.TranslationProcess;
 import com.example.dictionary.config.GenericTestConfiguration;
@@ -25,7 +26,7 @@ import java.util.List;
 
 import static org.junit.Assert.*;
 
-@ContextConfiguration(classes = {GenericTestConfiguration.class, PropertySourcesPlaceholderConfigurer.class},
+@ContextConfiguration(classes = AppJavaConfig.AppConfiguration.class,
 	initializers = TranslationCommandTest.PropertyMockingApplicationContextInitializer.class)
 @RunWith(SpringJUnit4ClassRunner.class)
 public class TranslationCommandTest {
@@ -36,8 +37,7 @@ public class TranslationCommandTest {
 	@Test
 	public void bookTranslationTest() {
 		TranslationProcess process = TranslationProcess.fromCommandParameters(new CommandParameters("search book"));
-		TranslationCommand command = (TranslationCommand) factory.getBean(
-				"translationCommand", process);
+		TranslationCommand command = factory.getBean(TranslationCommand.class, process);
 		process = command.execute();
 
 		List<DictionaryWord> dictionaryWords = process.getWords();
