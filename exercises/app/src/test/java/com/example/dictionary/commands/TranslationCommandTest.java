@@ -9,10 +9,15 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContextInitializer;
+import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
+import org.springframework.core.env.PropertiesPropertySource;
+import org.springframework.core.env.StandardEnvironment;
+import org.springframework.mock.env.MockPropertySource;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
@@ -20,7 +25,8 @@ import java.util.List;
 
 import static org.junit.Assert.*;
 
-@ContextConfiguration(classes = {TranslationCommandTest.JavaConfiguration.class, TranslationService.class})
+@ContextConfiguration(classes = {GenericTestConfiguration.class, PropertySourcesPlaceholderConfigurer.class},
+	initializers = TranslationCommandTest.PropertyMockingApplicationContextInitializer.class)
 @RunWith(SpringJUnit4ClassRunner.class)
 public class TranslationCommandTest {
 
@@ -39,14 +45,13 @@ public class TranslationCommandTest {
 		assertEquals("księga", dictionaryWords.get(1).getPolishWord());
 	}
 
-	@Configuration
-	@PropertySource("classpath:META-INF/spring/dict.properties")
-	public static class JavaConfiguration extends GenericTestConfiguration {
+	public static class PropertyMockingApplicationContextInitializer implements ApplicationContextInitializer<ConfigurableApplicationContext> {
+		@Override
+		public void initialize(ConfigurableApplicationContext applicationContext) {
+			PropertiesPropertySource properties = new MockPropertySource().withProperty("urlStringTemplate",
+					"http://www.dict.pl/dict?word={}&words=&lang=PL");
+			applicationContext.getEnvironment().getPropertySources().replace(StandardEnvironment.SYSTEM_ENVIRONMENT_PROPERTY_SOURCE_NAME, properties);
 
-		@Bean
-		public static PropertySourcesPlaceholderConfigurer properties() {
-			return new PropertySourcesPlaceholderConfigurer();
 		}
 	}
-
 }
