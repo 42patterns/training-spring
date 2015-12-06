@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.servlet.ModelAndView;
 
 import java.util.List;
 
@@ -37,6 +38,14 @@ public class WordsController {
     public List<DictionaryWord> search(@PathVariable String word) {
         return service.getTranslationsForWord(word);
     }
+
+    @RequestMapping(value = "/search/{word}.html", method = RequestMethod.GET)
+    public ModelAndView htmlOutputSearch(@PathVariable String word) {
+        ModelAndView model = new ModelAndView("words");
+        model.addObject("translations", service.getTranslationsForWord(word));
+        return model;
+    }
+
 
     @RequestMapping(value = "/search/{word}/{elementId}", method = RequestMethod.POST,
             produces = MediaType.APPLICATION_JSON_VALUE)
