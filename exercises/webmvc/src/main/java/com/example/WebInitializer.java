@@ -16,7 +16,7 @@ public class WebInitializer implements WebApplicationInitializer {
         AnnotationConfigWebApplicationContext rootContext =
                 new AnnotationConfigWebApplicationContext();
         rootContext.getEnvironment().setActiveProfiles("hibernate");
-        rootContext.register(AppJavaConfig.AppConfiguration.class);
+        rootContext.register(AppConfiguration.class);
 
         // Manage the lifecycle of the root application context
         container.addListener(new ContextLoaderListener(rootContext));

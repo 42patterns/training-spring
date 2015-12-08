@@ -18,6 +18,13 @@ import java.util.stream.IntStream;
 public class TranslationService {
     private static Logger log = Logger.getLogger(TranslationService.class);
 
+    public TranslationService() {
+    }
+
+    public TranslationService(String urlStringTemplate) {
+        this.urlStringTemplate = urlStringTemplate;
+    }
+
     @Value("${urlStringTemplate}")
     private String urlStringTemplate;
 

@@ -46,7 +46,6 @@ public class WordsController {
         return model;
     }
 
-
     @RequestMapping(value = "/search/{word}/{elementId}", method = RequestMethod.POST,
             produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
