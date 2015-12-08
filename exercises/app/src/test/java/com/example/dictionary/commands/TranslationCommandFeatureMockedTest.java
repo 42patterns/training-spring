@@ -1,6 +1,6 @@
 package com.example.dictionary.commands;
 
-import com.example.AppJavaConfig;
+import com.example.AppConfiguration;
 import com.example.dictionary.CommandParameters;
 import com.example.dictionary.TranslationProcess;
 import com.example.dictionary.model.DictionaryWord;
@@ -24,7 +24,7 @@ import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 
-@ContextConfiguration(classes = AppJavaConfig.AppConfiguration.class,
+@ContextConfiguration(classes = AppConfiguration.class,
 		initializers = TranslationCommandFeatureMockedTest.LocalServerPropertyApplicationContextInitializer.class)
 @RunWith(SpringJUnit4ClassRunner.class)
 public class TranslationCommandFeatureMockedTest {

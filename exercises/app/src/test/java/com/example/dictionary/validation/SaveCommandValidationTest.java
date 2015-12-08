@@ -1,6 +1,6 @@
 package com.example.dictionary.validation;
 
-import com.example.AppJavaConfig;
+import com.example.AppConfiguration;
 import com.example.dictionary.CommandParameters;
 import com.example.dictionary.TranslationProcess;
 import com.example.dictionary.commands.Command;
@@ -11,10 +11,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.config.BeanDefinition;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Scope;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -28,7 +24,7 @@ import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.*;
 
 @ActiveProfiles("test")
-@ContextConfiguration(classes = {AppJavaConfig.AppConfiguration.class, GenericTestConfiguration.class})
+@ContextConfiguration(classes = {AppConfiguration.class, GenericTestConfiguration.class})
 @RunWith(SpringJUnit4ClassRunner.class)
 public class SaveCommandValidationTest {
 

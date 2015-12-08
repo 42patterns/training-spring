@@ -1,21 +1,15 @@
 package com.example.dictionary.commands;
 
-import com.example.AppJavaConfig;
+import com.example.AppConfiguration;
 import com.example.dictionary.CommandParameters;
 import com.example.dictionary.TranslationProcess;
-import com.example.dictionary.config.GenericTestConfiguration;
 import com.example.dictionary.model.DictionaryWord;
-import com.example.dictionary.translation.TranslationService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContextInitializer;
 import org.springframework.context.ConfigurableApplicationContext;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.PropertySource;
-import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.core.env.PropertiesPropertySource;
 import org.springframework.core.env.StandardEnvironment;
 import org.springframework.mock.env.MockPropertySource;
@@ -26,7 +20,7 @@ import java.util.List;
 
 import static org.junit.Assert.*;
 
-@ContextConfiguration(classes = AppJavaConfig.AppConfiguration.class,
+@ContextConfiguration(classes = AppConfiguration.class,
 	initializers = TranslationCommandTest.PropertyMockingApplicationContextInitializer.class)
 @RunWith(SpringJUnit4ClassRunner.class)
 public class TranslationCommandTest {
