@@ -2,6 +2,8 @@ package com.example;
 
 import org.hibernate.SessionFactory;
 import org.hibernate.dialect.MySQL5Dialect;
+import org.springframework.beans.factory.annotation.Autowire;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.*;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
@@ -9,6 +11,7 @@ import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.orm.hibernate4.HibernateTransactionManager;
 import org.springframework.orm.hibernate4.LocalSessionFactoryBean;
 import org.springframework.orm.jpa.JpaTransactionManager;
+import org.springframework.orm.jpa.JpaVendorAdapter;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
@@ -68,10 +71,14 @@ public class AppConfiguration {
     public static class JpaConfiguration {
 
         @Bean
-        public LocalContainerEntityManagerFactoryBean entityManagerFactory(DataSource ds) {
+        public JpaVendorAdapter adapter() {
             HibernateJpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
             vendorAdapter.setShowSql(Boolean.TRUE);
+            return vendorAdapter;
+        }
 
+        @Bean
+        public LocalContainerEntityManagerFactoryBean entityManagerFactory(DataSource ds, JpaVendorAdapter vendorAdapter) {
             LocalContainerEntityManagerFactoryBean emf = new LocalContainerEntityManagerFactoryBean();
             emf.setJpaVendorAdapter(vendorAdapter);
             emf.setPackagesToScan("com.example.dictionary.model");
