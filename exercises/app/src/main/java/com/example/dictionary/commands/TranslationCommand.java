@@ -20,16 +20,11 @@ import java.util.Set;
 @Scope(value=BeanDefinition.SCOPE_PROTOTYPE)
 public class TranslationCommand extends Command {
 
-
-    @Autowired
-    TranslationService service;
+	@Autowired
+    private TranslationService service;
 
 	@Autowired
 	private Validator validator;
-
-	public TranslationCommand() {
-		super(TranslationProcess.fromCommandParameters(new CommandParameters("search")));
-	}
 
 	public TranslationCommand(TranslationProcess process) {
 		super(process);

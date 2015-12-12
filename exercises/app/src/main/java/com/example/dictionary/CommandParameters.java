@@ -15,6 +15,7 @@ public class CommandParameters {
 	@Size(min=1)
 	private String commandName;
 
+	@NotNull(groups=SearchValidationGroup.class)
 	@Size.List({
 		@Size(min=0, max=0, groups=NoAttributesValidationGroup.class),
 		@Size(min=1, groups=SearchValidationGroup.class),
