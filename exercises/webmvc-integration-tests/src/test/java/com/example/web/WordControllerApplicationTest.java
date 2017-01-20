@@ -3,6 +3,7 @@ package com.example.web;
 import com.example.TestAppRunner;
 import com.example.AppConfiguration;
 import com.example.DispatcherConfig;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.openqa.selenium.By;
@@ -23,6 +24,7 @@ import java.util.List;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
+@Ignore
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = {TestAppRunner.class})
 @WebIntegrationTest(randomPort = true)

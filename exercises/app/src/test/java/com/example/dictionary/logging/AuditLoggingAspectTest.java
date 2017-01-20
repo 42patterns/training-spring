@@ -7,6 +7,7 @@ import com.example.dictionary.commands.TranslationCommand;
 import com.example.dictionary.commands.TranslationCommandLocalFileTest;
 import com.example.dictionary.config.GenericTestConfiguration;
 import com.example.dictionary.translation.TranslationService;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.BeanFactory;
@@ -22,6 +23,7 @@ import java.util.Properties;
 
 import static org.mockito.Mockito.*;
 
+@Ignore
 @ContextConfiguration(classes = AuditLoggingAspectTest.AspectConfiguration.class)
 @RunWith(SpringJUnit4ClassRunner.class)
 public class AuditLoggingAspectTest {
@@ -33,7 +35,7 @@ public class AuditLoggingAspectTest {
 	AuditLoggingAspect aspect;
 	
 	@Test
-	public void aspectIsInvoked() {
+	public void should_aspect_call_the_logging_wrapper() {
 		TranslationProcess process = TranslationProcess.fromCommandParameters(new CommandParameters("search book"));
 		TranslationCommand command = factory.getBean(TranslationCommand.class, process);
 

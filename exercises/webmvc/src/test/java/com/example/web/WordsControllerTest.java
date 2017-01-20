@@ -4,13 +4,7 @@ import com.example.dictionary.model.DictionaryWord;
 import com.example.dictionary.translation.TranslationService;
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.Mockito;
 import org.springframework.http.MediaType;
-import org.springframework.mock.web.MockHttpServletRequest;
-import org.springframework.test.web.ModelAndViewAssert;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
 
@@ -23,7 +17,6 @@ import static org.springframework.test.web.ModelAndViewAssert.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.standaloneSetup;
-import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppContextSetup;
 
 public class WordsControllerTest {
 
@@ -69,9 +62,9 @@ public class WordsControllerTest {
     @Test
     public void test_json_output() throws Exception {
         standaloneSetup(controller).build()
-                .perform(get("/search/dom").accept(MediaType.APPLICATION_JSON_VALUE))
+                .perform(get("/search/dom").accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(content().contentType("application/json"))
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$[0].polishWord").value("dom"))
                 .andExpect(jsonPath("$[0].englishWord").value("house"));
     }

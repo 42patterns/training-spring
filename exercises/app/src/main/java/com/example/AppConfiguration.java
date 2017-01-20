@@ -2,17 +2,16 @@ package com.example;
 
 import org.hibernate.SessionFactory;
 import org.hibernate.dialect.MySQL5Dialect;
-import org.springframework.beans.factory.annotation.Autowire;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.*;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
-import org.springframework.orm.hibernate4.HibernateTransactionManager;
-import org.springframework.orm.hibernate4.LocalSessionFactoryBean;
+import org.springframework.orm.hibernate5.HibernateTransactionManager;
+import org.springframework.orm.hibernate5.LocalSessionFactoryBean;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.JpaVendorAdapter;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
+import org.springframework.orm.jpa.vendor.HibernateJpaDialect;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
@@ -22,18 +21,23 @@ import javax.sql.DataSource;
 import java.util.Properties;
 
 @Configuration
-@ComponentScan(value = { "com.example.dictionary", "com.example.helloworld" },
-    excludeFilters = @ComponentScan.Filter(
-            value = Configuration.class,
-            type = FilterType.ANNOTATION)
+@ComponentScan(value = {"com.example.dictionary", "com.example.helloworld"},
+        excludeFilters = @ComponentScan.Filter(
+                value = Configuration.class,
+                type = FilterType.ANNOTATION)
 )
 @PropertySource("classpath:META-INF/spring/dict.properties")
 @EnableAspectJAutoProxy
 @EnableTransactionManagement
 @Import({AppConfiguration.JdbcConfiguration.class,
-AppConfiguration.HibernateConfiguration.class,
-AppConfiguration.JpaConfiguration.class})
+        AppConfiguration.HibernateConfiguration.class,
+        AppConfiguration.JpaConfiguration.class})
 public class AppConfiguration {
+
+    @Bean
+    public static PropertySourcesPlaceholderConfigurer properties() {
+        return new PropertySourcesPlaceholderConfigurer();
+    }
 
     @Bean(name = "validator")
     public LocalValidatorFactoryBean validator() {
@@ -50,12 +54,7 @@ public class AppConfiguration {
         return ds;
     }
 
-    @Bean
-    public static PropertySourcesPlaceholderConfigurer properties() {
-        return new PropertySourcesPlaceholderConfigurer();
-    }
-
-	@Configuration
+    @Configuration
     @Profile("jdbc")
     public static class JdbcConfiguration {
 
@@ -66,7 +65,7 @@ public class AppConfiguration {
 
     }
 
-	@Configuration
+    @Configuration
     @Profile("jpa")
     public static class JpaConfiguration {
 
@@ -81,6 +80,7 @@ public class AppConfiguration {
         public LocalContainerEntityManagerFactoryBean entityManagerFactory(DataSource ds, JpaVendorAdapter vendorAdapter) {
             LocalContainerEntityManagerFactoryBean emf = new LocalContainerEntityManagerFactoryBean();
             emf.setJpaVendorAdapter(vendorAdapter);
+            emf.setJpaDialect(new HibernateJpaDialect());
             emf.setPackagesToScan("com.example.dictionary.model");
             emf.setDataSource(ds);
             return emf;
@@ -95,7 +95,7 @@ public class AppConfiguration {
 
     }
 
-	@Configuration
+    @Configuration
     @Profile("hibernate")
     public static class HibernateConfiguration {
 
@@ -103,7 +103,7 @@ public class AppConfiguration {
         public LocalSessionFactoryBean session(DataSource ds) {
             LocalSessionFactoryBean session = new LocalSessionFactoryBean();
             session.setDataSource(ds);
-            session.setPackagesToScan(new String[] { "com.example.dictionary.model" });
+            session.setPackagesToScan(new String[]{"com.example.dictionary.model"});
 
             Properties props = new Properties();
             props.put("hibernate.dialect", MySQL5Dialect.class.getName());
@@ -121,3 +121,4 @@ public class AppConfiguration {
         }
     }
 }
+
