@@ -1,0 +1,13 @@
+version: '2'
+
+services:
+  mysql:
+    image: mysql
+    command: --lower-case-table-names=1
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: translations
+    volumes:
+      - ./data:/docker-entrypoint-initdb.d
+    ports:
+      - "3306:3306"
