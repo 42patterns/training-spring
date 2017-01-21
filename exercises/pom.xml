@@ -34,7 +34,7 @@
                 <groupId>com.example.spring</groupId>
                 <artifactId>training-spring-webmvc</artifactId>
                 <version>${project.version}</version>
-                <classifier>classes</classifier>
+                <type>war</type>
             </dependency>
 
             <dependency>
