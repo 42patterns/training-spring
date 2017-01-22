@@ -37,7 +37,7 @@ public class TranslationCommand extends Command {
 	}
 	
 	public TranslationProcess execute() {
-        List<DictionaryWord> words = service.getTranslationsForWord(getFirstAttribute(getParams()));
+		List<DictionaryWord> words = service.getTranslationsForWord(getFirstAttribute(getParams()));
 		process.setWords(words);
 		return process;
 	}
