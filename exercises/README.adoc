@@ -6,46 +6,15 @@ Ten projekt zawiera przykłady (ćwiczenia oraz rozwiązania ćwiczeń) do szkol
 
 Celem zadań będzie napisanie aplikacji która pobiera tłumaczenia słów wpisanych z konsoli oraz wyświetla je na ekranie. Wraz z rozwojem aplikacji (i poznawaniem Spring Framework) będziemy w kolejnych ćwiczeniach dodawać kolejne funkcjonalności. 
 
-Bazowa wersja programu jest gotowa do pobrania: https://github.com/kubamarchwicki/training-spring; aplikacja zawiera podstawową konfigurację aplikacji w Springu oraz prosty kontroler umożliwiający podawanie komand z linii poleceń. 
+To jest bazowa wersja programu; aplikacja zawiera podstawową konfigurację aplikacji w Springu oraz prosty kontroler umożliwiający podawanie komand z linii poleceń.
 
 == Zadanie 1 – serwis tłumaczący
 
-Dodaj serwis pobierający tłumaczenia angielskiego słowa z serwisu http://www.dict.pl dostępny pod komendą: _search [słowo]_
+Dodaj serwis pobierający tłumaczenia angielskiego słowa z serwisu http://www.dict.pl dostępny pod komendą: _search [słowo]_.
+Możesz bezpośrednio wykorzystać klasę `TranslationService`, którą należy odpowiednio rozbudowac o adnotację Spring Framework.
+Metoda `TranslationService#getTranslationsForWord())` zwraca listę obiektów `DictionaryWord` (tupli) zawierających parę: słowo polskie, słowo angielskie.
 
-Algorytm pobierania wszystkich słów może wyglądać następująco:
-
-[source, java]
-----
-List<String> words = new ArrayList<String>();
-
-String urlString = "http://www.dict.pl/dict?word=" + wordToFind
-		+ "&words=&lang=PL";
-
-BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(new URL(
-		urlString).openStream()));
-
-String line = bufferedReader.readLine();
-Pattern pat = Pattern
-		.compile(".*<a href=\"dict\\?words?=(.*)&lang.*");
-
-while (line != null) {
-	Matcher matcher = pat.matcher(line);
-	if (matcher.find()) {
-		String word = matcher.group(matcher.groupCount());
-		words.add(word);
-	} 
-	line = bufferedReader.readLine();
-	
-}
-
-if (bufferedReader != null) {
-	bufferedReader.close();
-}
-----
-
-Otrzymana lista zawiera naprzemiennie słowo polskie (po tłumaczeniu) oraz oryginalne słowo angielskie (zadane przez użytkownika lub wyraz bliskoznaczny). 
-
-Utworzony serwis powinien zwracać listę par: słowo polskie, słowo angielskie.
+Tłumaczenie mogą zostać wyświetlone na ekranie.
 
 == Zadanie 2 – testy jednostkowe
 
@@ -70,7 +39,7 @@ W Spring  Framework najłatwiej uzyskać to poprzez dodanie zewnętrznego pliku 
 ----
 @Configuration
 @ComponentScan(value = { "com.example.dictionary", "com.example.helloworld" })
-PropertySource("META-INF/spring/dict.properties")
+@PropertySource("META-INF/spring/dict.properties")
 public static class AppConfiguration {
 
 	@Bean
@@ -243,7 +212,7 @@ Przydatne biblioteki do dołączenia do projektu:
 <dependency>
 	<groupId>org.hibernate</groupId>
 	<artifactId>hibernate-entitymanager</artifactId>
-	<version>5.0.5.Final</version>
+	<version>5.2.6.Final</version>
 </dependency>
 
 <dependency>
