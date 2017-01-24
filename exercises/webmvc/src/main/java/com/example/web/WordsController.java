@@ -33,7 +33,7 @@ public class WordsController {
     }
 
     @RequestMapping(value = "/search/{word}", method = RequestMethod.GET,
-            produces = MediaType.APPLICATION_JSON_VALUE)
+            produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
     @ResponseBody
     public List<DictionaryWord> search(@PathVariable String word) {
         return service.getTranslationsForWord(word);
@@ -46,8 +46,7 @@ public class WordsController {
         return model;
     }
 
-    @RequestMapping(value = "/search/{word}/{elementId}", method = RequestMethod.POST,
-            produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/search/{word}/{elementId}", method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.CREATED)
     public void save(@PathVariable String word, @PathVariable String elementId) {
         List<DictionaryWord> translations = service.getTranslationsForWord(word);
