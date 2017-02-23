@@ -12,6 +12,7 @@
         <module>app</module>
         <module>web</module>
         <module>webmvc</module>
+        <module>webmvc-secured</module>
         <module>webmvc-integration-tests</module>
     </modules>
 
