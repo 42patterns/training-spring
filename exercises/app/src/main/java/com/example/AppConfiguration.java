@@ -1,11 +1,14 @@
 package com.example;
 
+import org.apache.activemq.ActiveMQConnectionFactory;
 import org.hibernate.SessionFactory;
 import org.hibernate.dialect.MySQL5Dialect;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.*;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
+import org.springframework.jms.core.JmsTemplate;
 import org.springframework.orm.hibernate5.HibernateTransactionManager;
 import org.springframework.orm.hibernate5.LocalSessionFactoryBean;
 import org.springframework.orm.jpa.JpaTransactionManager;
@@ -16,8 +19,10 @@ import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 
+import javax.jms.ConnectionFactory;
 import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
+import java.util.Arrays;
 import java.util.Properties;
 
 @Configuration
@@ -31,7 +36,8 @@ import java.util.Properties;
 @EnableTransactionManagement
 @Import({AppConfiguration.JdbcConfiguration.class,
         AppConfiguration.HibernateConfiguration.class,
-        AppConfiguration.JpaConfiguration.class})
+        AppConfiguration.JpaConfiguration.class,
+        AppConfiguration.MessagingConfiguration.class})
 public class AppConfiguration {
 
     @Bean
@@ -121,6 +127,31 @@ public class AppConfiguration {
             tx.setSessionFactory(factory);
             return tx;
         }
+    }
+
+    @Configuration
+    public static class MessagingConfiguration {
+
+        private static final String DEFAULT_BROKER_URL = "tcp://localhost:61616";
+
+        private static final String ORDER_QUEUE = "words-queue";
+
+        @Bean
+        public ActiveMQConnectionFactory connectionFactory(){
+            ActiveMQConnectionFactory connectionFactory = new ActiveMQConnectionFactory();
+            connectionFactory.setBrokerURL(DEFAULT_BROKER_URL);
+            connectionFactory.setTrustAllPackages(true);
+            return connectionFactory;
+        }
+
+        @Bean
+        public JmsTemplate jmsTemplate(ConnectionFactory cf){
+            JmsTemplate template = new JmsTemplate();
+            template.setConnectionFactory(cf);
+            template.setDefaultDestinationName(ORDER_QUEUE);
+            return template;
+        }
+
     }
 }
 

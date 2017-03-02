@@ -3,6 +3,7 @@ package com.example.dictionary.translation;
 import com.example.dictionary.model.DictionaryWord;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
 import java.net.URL;

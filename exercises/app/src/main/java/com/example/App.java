@@ -8,7 +8,7 @@ public class App {
 	public static void main(String... args) {
 
         ClassPathXmlApplicationContext ctx = new ClassPathXmlApplicationContext();
-        ctx.getEnvironment().setActiveProfiles("jpa");
+        ctx.getEnvironment().setActiveProfiles("jdbc");
         ctx.setConfigLocation("META-INF/spring/app-context.xml");
         ctx.refresh();
 

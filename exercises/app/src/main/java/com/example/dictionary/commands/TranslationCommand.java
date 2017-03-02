@@ -8,8 +8,10 @@ import com.example.dictionary.validation.groups.SearchValidationGroup;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.Scope;
+import org.springframework.jms.core.JmsTemplate;
 import org.springframework.stereotype.Component;
 
+import javax.jms.ObjectMessage;
 import javax.validation.ConstraintViolation;
 import javax.validation.Validator;
 import java.util.HashSet;
@@ -26,6 +28,9 @@ public class TranslationCommand extends Command {
 	@Autowired
 	private Validator validator;
 
+	@Autowired
+	JmsTemplate jmsTemplate;
+
 	public TranslationCommand(TranslationProcess process) {
 		super(process);
 	}
@@ -37,7 +42,14 @@ public class TranslationCommand extends Command {
 	}
 	
 	public TranslationProcess execute() {
-		List<DictionaryWord> words = service.getTranslationsForWord(getFirstAttribute(getParams()));
+		String word = getFirstAttribute(getParams());
+
+		jmsTemplate.send(session -> {
+			ObjectMessage objectMessage = session.createObjectMessage(word);
+			return objectMessage;
+		});
+
+		List<DictionaryWord> words = service.getTranslationsForWord(word);
 		process.setWords(words);
 		return process;
 	}

@@ -10,6 +10,7 @@
 
     <modules>
         <module>app</module>
+        <module>app-jms</module>
         <module>web</module>
         <module>webmvc</module>
         <module>webmvc-secured</module>

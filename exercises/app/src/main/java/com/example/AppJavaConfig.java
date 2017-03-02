@@ -8,7 +8,7 @@ public class AppJavaConfig {
 	public static void main(String... args) {
 
         AnnotationConfigApplicationContext ctx = new AnnotationConfigApplicationContext();
-        ctx.getEnvironment().setActiveProfiles("jpa");
+        ctx.getEnvironment().setActiveProfiles("jdbc");
         ctx.register(AppConfiguration.class);
         ctx.refresh();
 
