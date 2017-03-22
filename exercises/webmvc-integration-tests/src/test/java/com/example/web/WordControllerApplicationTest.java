@@ -26,6 +26,7 @@ public class WordControllerApplicationTest {
 
     @Test
     public void test_application() throws IOException, InterruptedException {
+
         final String location = "http://localhost:" + server.getPort() + "/search/dom.html";
 
         WebDriver driver = new HtmlUnitDriver();

@@ -28,8 +28,8 @@ public class TranslationCommand extends Command {
 	@Autowired
 	private Validator validator;
 
-	@Autowired
-	JmsTemplate jmsTemplate;
+//	@Autowired
+//	JmsTemplate jmsTemplate;
 
 	public TranslationCommand(TranslationProcess process) {
 		super(process);
@@ -44,10 +44,10 @@ public class TranslationCommand extends Command {
 	public TranslationProcess execute() {
 		String word = getFirstAttribute(getParams());
 
-		jmsTemplate.send(session -> {
-			ObjectMessage objectMessage = session.createObjectMessage(word);
-			return objectMessage;
-		});
+//		jmsTemplate.send(session -> {
+//			ObjectMessage objectMessage = session.createObjectMessage(word);
+//			return objectMessage;
+//		});
 
 		List<DictionaryWord> words = service.getTranslationsForWord(word);
 		process.setWords(words);
