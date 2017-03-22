@@ -3,7 +3,6 @@ package com.example;
 import org.apache.activemq.ActiveMQConnectionFactory;
 import org.hibernate.SessionFactory;
 import org.hibernate.dialect.MySQL5Dialect;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.*;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
@@ -22,7 +21,6 @@ import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 import javax.jms.ConnectionFactory;
 import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
-import java.util.Arrays;
 import java.util.Properties;
 
 @Configuration
@@ -53,10 +51,11 @@ public class AppConfiguration {
     @Bean
     public DataSource dataSource() {
         DriverManagerDataSource ds = new DriverManagerDataSource();
-        ds.setDriverClassName(com.mysql.jdbc.Driver.class.getName());
-        ds.setUrl("jdbc:mysql://localhost:3306/translations?useUnicode=true&characterEncoding=utf-8");
-        ds.setUsername("root");
-        ds.setPassword("root");
+        ds.setDriverClassName(org.hsqldb.jdbc.JDBCDriver.class.getName());
+//        ds.setUrl("jdbc:hsqldb:file:/tmp/testdb");
+        ds.setUrl("jdbc:hsqldb:mem:testmemdb");
+        ds.setUsername("SA");
+        ds.setPassword("");
         return ds;
     }
 

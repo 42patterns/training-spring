@@ -132,18 +132,25 @@ Nasze repozytorium przechowuje dane w pamięci. Nic nie stoi na przeszkodzie aby
 
 [source, sql]
 ----
-create database translations;
-
 create table words (
-	id int not null auto_increment primary key,
+	id int identity primary key,
 	polish_word varchar(100),
 	english_word varchar(100)
-) DEFAULT CHARSET=utf8 COLLATE=utf8_polish_ci;
+);
 ----
 
 Do zapisywania danych użyjmy klasy `JdbcTemplate`
 
-TIP: Konfiguracja bazy danych wymaga dodania sterownika MySQL lub PostreSQL.
+TIP: Konfiguracja bazy danych wymaga dodania sterownika HSQLDB, MySQL lub PostreSQL.
+
+[source, xml]
+----
+<dependency>
+    <groupId>org.hsqldb</groupId>
+    <artifactId>hsqldb</artifactId>
+    <version>2.3.2</version>
+</dependency>
+----
 
 [source, xml]
 ----
@@ -178,8 +185,12 @@ Przydatne informację dot. połączenia
 [source, txt]
 ----
 driver = com.mysql.jdbc.Driver
-url = jdbc:mysql://localhost:3306/translations?useUnicode=true&amp;characterEncoding=utf-8
+url = "jdbc:hsqldb:file:/tmp/testdb" //<1>
+url = "jdbc:hsqldb:mem:testmemdb" //<2>
+
 ----
+<1> Baza w pliku
+<2> Baza w pamięci
 
 === Zadanie 6a – wykorzystanie mappera obiektowego
 
