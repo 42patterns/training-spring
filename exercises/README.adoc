@@ -4,7 +4,7 @@ Ten projekt zawiera przykłady (ćwiczenia oraz rozwiązania ćwiczeń) do szkol
 
 == Ćwiczenia
 
-Celem zadań będzie napisanie aplikacji która pobiera tłumaczenia słów wpisanych z konsoli oraz wyświetla je na ekranie. Wraz z rozwojem aplikacji (i poznawaniem Spring Framework) będziemy w kolejnych ćwiczeniach dodawać kolejne funkcjonalności. 
+Celem zadań będzie napisanie aplikacji która pobiera tłumaczenia słów wpisanych z konsoli oraz wyświetla je na ekranie. Wraz z rozwojem aplikacji (i poznawaniem Spring Framework) będziemy w kolejnych ćwiczeniach dodawać kolejne funkcjonalności.
 
 To jest bazowa wersja programu; aplikacja zawiera podstawową konfigurację aplikacji w Springu oraz prosty kontroler umożliwiający podawanie komand z linii poleceń.
 
@@ -18,13 +18,13 @@ Tłumaczenie mogą zostać wyświetlone na ekranie.
 
 == Zadanie 2 – testy jednostkowe
 
-Napisany przez nas w ćwiczeniu 1 serwis należałoby przetestować, najlepiej w sposób automatyczny. Bazując na istniejącym `ExampleConfigurationTests` napisz nowy test dla serwisu. 
+Napisany przez nas w ćwiczeniu 1 serwis należałoby przetestować, najlepiej w sposób automatyczny. Bazując na istniejącym `ExampleConfigurationTests` napisz nowy test dla serwisu.
 
 Wiedząc o tym co mówi konwencja Spring Framework nt. plików konfiguracyjnych dla testów, utwórz nową konfigurację XML dla testu albo wykorzystaj wewnętrzną klasę JavaConfig.
 
 === Zadanie 2a
 
-Test korzystający bezpośrednio z klasy `TranslationService` nie jest najlepszy – odwołuje się do zasobów w Internecie, przez co (w przypadku braku dostępu do Internetu nie zadziała – nie będzie działał stabilnie). Co więcej, ze względu na wykonywanie połączenia ze zdalnym serwerem, test działa nieporównywalnie dłużej niż jakby wywoływał się w całości lokalnie (albo w całości w pamięci). 
+Test korzystający bezpośrednio z klasy `TranslationService` nie jest najlepszy – odwołuje się do zasobów w Internecie, przez co (w przypadku braku dostępu do Internetu nie zadziała – nie będzie działał stabilnie). Co więcej, ze względu na wykonywanie połączenia ze zdalnym serwerem, test działa nieporównywalnie dłużej niż jakby wywoływał się w całości lokalnie (albo w całości w pamięci).
 
 Aby uniknąć takiego typu zachowania, należałoby zastąpić bezpośrednie odwołanie do Internetu, np. uniezależniając serwis `TranslationService` od konkretnego adresu URL (i przekazując go jako parametr, zmienną klasy – poprzez adnotację `@Value`).
 
@@ -56,26 +56,38 @@ Do lokalnego pliku można dostać się bezpośrednio poprzez ClassPath `this.get
 
 Do serwisu `TranslationService` dodaj metodą sprawdzającą poprawność przekazanych parametrów. Dla serwisu wyszukującego poprawne komenda to: _search [słowo do znalezienia]_
 
-Do walidacji wykorzystaj standard Bean Validation (walidacja przez adnotacje). W tym celu dodaj do projektu następujące zależności. 
+Do walidacji wykorzystaj standard Bean Validation (walidacja przez adnotacje). W tym celu dodaj do projektu następujące zależności.
 
 [source, xml]
 ----
 <dependency>
-	<groupId>org.hibernate</groupId>
-	<artifactId>hibernate-validator</artifactId>
-	<version>5.2.4.Final</version>
+	<groupId>javax.validation</groupId>
+	<artifactId>validation-api</artifactId>
+	<version>1.1.0.Final</version>
+</dependency>
+<dependency>
+	<groupId>org.apache.bval</groupId>
+	<artifactId>org.apache.bval.bundle</artifactId>
+	<version>1.1.2</version>
 </dependency>
 ----
 
-TIP: walidacja bazuje na obiektach (innych niż String) więc na początek zmień parametry (komendy) na obiekt. Dodatkowo, przeprowadź refaktoryzację klasy `Command` i `TranslationService` aby logikę przetwarzania parametrów wejściowych zawierać w jednym miejscu. 
+TIP: walidacja bazuje na obiektach (innych niż String) więc na początek zmień parametry (komendy) na obiekt. Dodatkowo, przeprowadź refaktoryzację klasy `Command` i `TranslationService` aby logikę przetwarzania parametrów wejściowych zawierać w jednym miejscu.
 
 Na przykład, wprowadź klasę `CommandParameters` o następującej strukturze, używaj jej do przekazywania parametrów CLI oraz na jej bazie przeprowadź walidację.
 
 [source, java]
 ----
-public class CommandParameters {
-	private String commandName;
-	private String[] attributes;
+public class CommandParams {
+    public final String command;
+    public final Args args;
+
+	public class Args {
+        final List<String> args;
+	}
+
+	//.. konstruktory i metody fabrykujące ominięte dla zwięzłości przykładu
+
 }
 ----
 
@@ -83,7 +95,7 @@ public class CommandParameters {
 
 Odwołanie się do aplikacji zewnętrznej (w naszym przypadku do serwisu http://dict.pl) jest niezmierni ważne z biznesowego punktu widzenia. Wyobraźmy sobie sytuację że to nie jest zwykły słownik  a zaawansowany Web Service, za którego wywołania pobierana jest opłata. Co miesiąc przychodzi faktura od dostawcy za wszystkie wywołania serwisu.
 
-Aby zweryfikować taką fakturę, należy upewnić się ile razy serwis był wywoływany. 
+Aby zweryfikować taką fakturę, należy upewnić się ile razy serwis był wywoływany.
 
 Jako że nie jest to wymaganie typowe dla naszego serwisu (można powiedzieć że jest to typowe wymaganie nie funkcjonalne) zaimplementuj je w sposób nie zmieniający głównego algorytmu działania serwisu `TranslationService`
 
@@ -97,11 +109,11 @@ Do implementacji logowania użyj komponentów Spring AOP
 </dependency>
 ----
 
-Zaloguj wywołanie publicznej metody serwisu, zaloguj informację o wywołaniu wraz z przekazywanym parametrem. 
+Zaloguj wywołanie publicznej metody serwisu, zaloguj informację o wywołaniu wraz z przekazywanym parametrem.
 
 == Zadanie 5 – zapisywanie wyników
 
-Dotychczas zupełnie pomijaliśmy kwestie zwracanych wyników – wyświetlaliśmy je na ekranie. Pora to zmienić. 
+Dotychczas zupełnie pomijaliśmy kwestie zwracanych wyników – wyświetlaliśmy je na ekranie. Pora to zmienić.
 
 Zacznijmy od wyświetlenia wszystkich słów na ekranie, w formie listy, a następnie wprowadźmy komendę zapisującą konkretne tłumaczenia: _save [numer wyników z listy]_
 
@@ -111,14 +123,14 @@ TIP: aby poprawnie obsługiwać listy należy przechować wyniki wyszukiwania or
 
 === Zadanie 5a - repozytorium
 
-„Pamięć” zaimplementowana w poprzednim ćwiczeniu jest rozwiązaniem stosunkowo naiwnym. Wszystkie dane przechowujemy w kontrolerze co czyni go grubym (antywzorzec _Fat Controller_). Aby to naprawić utwórzmy dodatkowy komponent obsługujący przechowywanie danych. 
+„Pamięć” zaimplementowana w poprzednim ćwiczeniu jest rozwiązaniem stosunkowo naiwnym. Wszystkie dane przechowujemy w kontrolerze co czyni go grubym (antywzorzec _Fat Controller_). Aby to naprawić utwórzmy dodatkowy komponent obsługujący przechowywanie danych.
 
 [source, java]
 ----
 public interface Repository {
 
 	public List<DictionaryWord> getSavedWords();
-	
+
 	public void addWord(DictionaryWord word);
 
 	public void printSavedWords();
@@ -170,7 +182,7 @@ TIP: Konfiguracja bazy danych wymaga dodania sterownika HSQLDB, MySQL lub Postre
 </dependency>
 ----
 
-Dodatkowo należy dodać bibliotekę Spring odpowiedzialną za połączenie za bazą danych. 
+Dodatkowo należy dodać bibliotekę Spring odpowiedzialną za połączenie za bazą danych.
 
 [source, xml]
 ----
@@ -196,9 +208,9 @@ url = "jdbc:hsqldb:mem:testmemdb" //<2>
 
 Pobierając dane z bazy danych możemy skorzystać z kolejnych dobrodziejstw Spring Framework, klasy `RowMapper`, umożliwiającej automatyczne mapowanie kolejnych elementów `ResultSet` na obiekt (w naszym przypadku `DictionaryWord`).
 
-== Zadanie 7 – wykorzystanie JPA 
+== Zadanie 7 – wykorzystanie JPA
 
-Bardzo często spotykanym sposobem połączenia z bazą danych jest wykorzystanie standardu JPA. W przypadku naszej prostej aplikacji jest to niezwykle proste, wszakże posługujemy się już obiektem domenowym `DictionaryWord` który moglibyśmy zapisać bezpośrednio w bazie danych. 
+Bardzo często spotykanym sposobem połączenia z bazą danych jest wykorzystanie standardu JPA. W przypadku naszej prostej aplikacji jest to niezwykle proste, wszakże posługujemy się już obiektem domenowym `DictionaryWord` który moglibyśmy zapisać bezpośrednio w bazie danych.
 
 Zmodyfikuj klasę `DictionaryWord` oraz dodaj nowe repozytorium `JpaRepository` – w ten sposób korzystając z JPA do zapisu danych do bazy
 
@@ -255,7 +267,7 @@ Wykorzystując klasy Spring `TransactionSynchronisationManager` oraz interfejs `
 
 == Zadanie 9 - Spring WebMVC
 
-Kolejnym krokiem będzie rozbudowa aplikacji o cześć serwerową - dodanie usługi www, umożliwiającej wykonanie tych samych operacji poprzez webservice REST. 
+Kolejnym krokiem będzie rozbudowa aplikacji o cześć serwerową - dodanie usługi www, umożliwiającej wykonanie tych samych operacji poprzez webservice REST.
 
 Webservice ma udostępniać następujące metody
 
@@ -275,7 +287,7 @@ Aby ułatwić sobie pracę, wykorzystajmy już istniejącą aplikację (projekt 
 ----
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
 		http://maven.apache.org/maven-v4_0_0.xsd"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 
