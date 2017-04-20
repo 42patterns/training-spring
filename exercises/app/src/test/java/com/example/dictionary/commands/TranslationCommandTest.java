@@ -30,7 +30,7 @@ public class TranslationCommandTest {
 
 	@Test
 	public void bookTranslationTest() {
-		TranslationProcess process = TranslationProcess.fromCommandParameters(new CommandParameters("search book"));
+		TranslationProcess process = TranslationProcess.fromCommandParameters(CommandParameters.from("search book"));
 		TranslationCommand command = factory.getBean(TranslationCommand.class, process);
 		process = command.execute();
 

@@ -1,6 +1,5 @@
 package com.example.dictionary.commands;
 
-import com.example.AppConfiguration;
 import com.example.dictionary.CommandParameters;
 import com.example.dictionary.TranslationProcess;
 import org.hamcrest.CoreMatchers;
@@ -23,7 +22,7 @@ public class ExitCommandIntegrationTest {
     @Test
     public void should_stop_running() {
         //given
-        Command command = factory.getCommand(TranslationProcess.fromCommandParameters(new CommandParameters("exit")));
+        Command command = factory.getCommand(TranslationProcess.fromCommandParameters(CommandParameters.from("exit")));
 
         //when
         TranslationProcess process = command.execute();

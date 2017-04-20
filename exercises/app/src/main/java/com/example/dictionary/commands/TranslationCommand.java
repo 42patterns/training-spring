@@ -55,7 +55,7 @@ public class TranslationCommand extends Command {
 	}
 
     private String getFirstAttribute(CommandParameters params) {
-        return params.getAttributes()[0];
+        return params.args.first();
     }
 
 

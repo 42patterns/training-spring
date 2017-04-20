@@ -20,7 +20,7 @@ public class AuditLoggingAspect {
 	@Before("execution(* com.example.dictionary.commands.TranslationCommand.execute())")
 	public void logWebServiceCall(JoinPoint p) {
 		TranslationCommand command = (TranslationCommand) p.getThis();
-		log.info(this.getClass(), "Calling [TranslationService(search)] for " + Arrays.asList(command.getParams().getAttributes()));
+		log.info(this.getClass(), "Calling [TranslationService(search)] for " + command.getParams().args);
 	}
 	
 }

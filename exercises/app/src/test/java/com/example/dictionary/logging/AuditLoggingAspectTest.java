@@ -34,7 +34,7 @@ public class AuditLoggingAspectTest {
 
     @Test
     public void should_aspect_call_the_logging_wrapper() {
-        TranslationProcess process = TranslationProcess.fromCommandParameters(new CommandParameters("search book"));
+        TranslationProcess process = TranslationProcess.fromCommandParameters(CommandParameters.from("search book"));
         TranslationCommand command = factory.getBean(TranslationCommand.class, process);
 
         command.execute();

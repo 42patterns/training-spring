@@ -33,7 +33,7 @@ public class SaveCommandValidationTest {
 
 	@Test
 	public void emptyTranslationList() {
-		TranslationProcess process = TranslationProcess.fromCommandParameters(new CommandParameters("save 0"));
+		TranslationProcess process = TranslationProcess.fromCommandParameters(CommandParameters.from("save 0"));
 		process.setWords(new ArrayList<DictionaryWord>());
 		
 		SaveWordsCommand service = (SaveWordsCommand) factory.getBean(
@@ -46,7 +46,7 @@ public class SaveCommandValidationTest {
 
 	@Test
 	public void nullTranslationList() {
-		TranslationProcess process = TranslationProcess.fromCommandParameters(new CommandParameters("save 0"));
+		TranslationProcess process = TranslationProcess.fromCommandParameters(CommandParameters.from("save 0"));
 		process.setWords(null);
 		
 		SaveWordsCommand service = (SaveWordsCommand) factory.getBean(
@@ -60,7 +60,7 @@ public class SaveCommandValidationTest {
 	
 	@Test
 	public void validCommand() {
-		TranslationProcess process = TranslationProcess.fromCommandParameters(new CommandParameters("save 0"));
+		TranslationProcess process = TranslationProcess.fromCommandParameters(CommandParameters.from("save 0"));
 		process.setWords(Arrays.asList(DictionaryWord.fromPolishWord("polishWord").withEnglishWord("englishWord").build()));
 		
 		SaveWordsCommand service = (SaveWordsCommand) factory.getBean(

@@ -28,7 +28,7 @@ public class TranslationCommandValidationTest {
 	
 	@Test
 	public void noAttributesCommand() {
-		TranslationProcess process = TranslationProcess.fromCommandParameters(new CommandParameters("search"));
+		TranslationProcess process = TranslationProcess.fromCommandParameters(CommandParameters.from("search"));
 		TranslationCommand service = factory.getBean(TranslationCommand.class, process);
 		
 		Set<ConstraintViolation<? extends Command>> errors = service.getErrors();
@@ -41,7 +41,7 @@ public class TranslationCommandValidationTest {
 	
 	@Test
 	public void validCommand() {
-		TranslationProcess process = TranslationProcess.fromCommandParameters(new CommandParameters("search book"));
+		TranslationProcess process = TranslationProcess.fromCommandParameters(CommandParameters.from("search book"));
 		TranslationCommand service = factory.getBean(TranslationCommand.class, process);
 
 		

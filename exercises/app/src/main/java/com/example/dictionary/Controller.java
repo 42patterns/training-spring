@@ -25,7 +25,7 @@ public class Controller {
 			System.out.print("dictionary > ");
 			String command = s.nextLine();
 			
-			process.setParams(new CommandParameters(command));
+			process.setParams(CommandParameters.from(command));
 
 			Command c = commandFactory.getCommand(process);
 			if (!c.isValid()) {

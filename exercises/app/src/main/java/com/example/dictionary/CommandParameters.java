@@ -1,48 +1,57 @@
 package com.example.dictionary;
 
-import java.util.Arrays;
-
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
-
 import com.example.dictionary.groups.OnlyOneArgumentValidationGroup;
 import com.example.dictionary.validation.groups.NoAttributesValidationGroup;
 import com.example.dictionary.validation.groups.SearchValidationGroup;
+import org.hibernate.validator.constraints.NotEmpty;
+
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+import java.util.Arrays;
+import java.util.List;
 
 public class CommandParameters {
 
-	@NotNull
-	@Size(min=1)
-	private String commandName;
+	@NotEmpty
+	public final String command;
 
-	@NotNull(groups=SearchValidationGroup.class)
-	@Size.List({
-		@Size(min=0, max=0, groups=NoAttributesValidationGroup.class),
-		@Size(min=1, groups=SearchValidationGroup.class),
-		@Size(min=1, max=1, groups=OnlyOneArgumentValidationGroup.class)
-	})
-	private String[] attributes;
+	@Valid
+	public final Args args;
 
-	public CommandParameters(String command) {
-		String[] commandParts = command.split(" ");
-		this.commandName = commandParts[0];
-		this.attributes = Arrays.copyOfRange(commandParts, 1, commandParts.length);
-	}
-	
-	public String getCommandName() {
-		return commandName;
+	private CommandParameters(String commandLine) {
+		String[] split = commandLine.split(" ");
+		this.command = split[0];
+		this.args = new Args(Arrays.copyOfRange(split, 1, split.length));
 	}
 
-	public void setCommandName(String commandName) {
-		this.commandName = commandName;
+	public static CommandParameters from(String commandLine) {
+		return new CommandParameters(commandLine);
 	}
 
-	public String[] getAttributes() {
-		return attributes;
-	}
+	public class Args {
 
-	public void setAttributes(String[] attributes) {
-		this.attributes = attributes;
-	}
+		@NotNull(groups=SearchValidationGroup.class)
+		@Size.List({
+				@Size(min=0, max=0, groups=NoAttributesValidationGroup.class),
+				@Size(min=1, groups=SearchValidationGroup.class),
+				@Size(min=1, max=1, groups=OnlyOneArgumentValidationGroup.class)
+		})
+		final List<String> args;
 
+		private Args(String[] a) {
+			this.args = Arrays.asList(a);
+		}
+
+		public String first() {
+			return args.iterator().next();
+		}
+
+		public int size() { return args.size(); }
+
+		@Override
+		public String toString() {
+			return "Args" + args;
+		}
+	}
 }

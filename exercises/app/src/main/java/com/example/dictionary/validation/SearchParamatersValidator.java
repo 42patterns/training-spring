@@ -26,11 +26,11 @@ public class SearchParamatersValidator implements
             return false;
         }
 
-		if (!pattern.matcher(command.getParams().getAttributes()[0]).matches()) {
+		if (!pattern.matcher(command.getParams().args.first()).matches()) {
             return false;
         }
 		
-		Integer saveIndex = Integer.valueOf(command.getParams().getAttributes()[0]);
+		Integer saveIndex = Integer.valueOf(command.getParams().args.first());
 		
 		if (saveIndex > (process.getWords().size() - 1)) {
             return false;

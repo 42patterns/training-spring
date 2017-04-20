@@ -15,7 +15,7 @@ public class CommandFactory {
 
     public Command getCommand(TranslationProcess process) {
         CommandParameters params = process.getParams();
-        switch (params.getCommandName()) {
+        switch (params.command) {
             case "exit":
                 return factory.getBean(ExitCommand.class, process);
             case "search":

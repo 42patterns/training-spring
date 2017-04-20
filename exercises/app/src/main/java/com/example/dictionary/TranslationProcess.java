@@ -47,7 +47,7 @@ public class TranslationProcess {
 
 	public static TranslationProcess fromCommandParameters(String strParams) {
 		TranslationProcess p = new TranslationProcess();
-		p.setParams(new CommandParameters(strParams));
+		p.setParams(CommandParameters.from(strParams));
 		return p;
 	}
 

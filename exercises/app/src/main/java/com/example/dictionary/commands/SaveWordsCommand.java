@@ -41,7 +41,7 @@ public class SaveWordsCommand extends Command {
     Validator validator;
 
 	public SaveWordsCommand() {
-		super(TranslationProcess.fromCommandParameters(new CommandParameters("save")));
+		super(TranslationProcess.fromCommandParameters(CommandParameters.from("save")));
 	}
 	
 	public SaveWordsCommand(TranslationProcess process) {
@@ -51,7 +51,7 @@ public class SaveWordsCommand extends Command {
     @Override
 	public TranslationProcess execute() {
         final TranslationProcess process = this.process;
-        final Integer i = Integer.valueOf(getParams().getAttributes()[0]);
+        final Integer i = Integer.valueOf(getParams().args.first());
 
         TransactionTemplate transactionTemplate = new TransactionTemplate(txManager);
         transactionTemplate.execute(status -> {
@@ -60,7 +60,7 @@ public class SaveWordsCommand extends Command {
             String filename = fileService.createFile(word.toString());
             TransactionSynchronizationManager.registerSynchronization(new FileRollbackHandler(filename));
             repository.addWord(word);
-            return null;  //To change body of implemented methods use File | Settings | File Templates.
+            return null;  //To change body from implemented methods use File | Settings | File Templates.
         });
 		return process;
 	}
